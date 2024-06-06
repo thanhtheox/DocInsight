@@ -1,0 +1,16 @@
+export {default as IC_Close} from './IC_Close';
+export {default as IC_Drawer} from './IC_Drawer';
+export {default as IC_Prev} from './IC_Prev';
+export {default as IC_Next} from './IC_Next';
+export {default as IC_Edit} from './IC_Edit';
+export {default as IC_Home} from './IC_Home';
+export {default as IC_Phone} from './IC_Phone';
+export {default as IC_Predict} from './IC_Predict';
+export {default as IC_Setting} from './IC_Setting';
+export {default as IC_Folder} from './IC_Folder';
+export {default as IC_Camera} from './IC_Camera';
+export {default as IC_Library} from './IC_Library';
+export {default as IC_Show} from './IC_Show';
+export {default as IC_Hide} from './IC_Hide';
+export {default as IC_Logo} from './IC_Logo';
+export {default as IC_Skip} from './IC_Skip';
