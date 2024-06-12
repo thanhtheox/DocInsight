@@ -19,13 +19,15 @@ import Onboarding from './src/screens/onboarding';
 import { IMG_Onboard1 } from './src/assets/images';
 import OnboardingScreen from './src/screens/onboarding';
 import UploadImage from './src/components/uploadImage';
+import SwitchSelector from './src/screens/auth/switchSelector';
+import Auth from './src/screens/auth/auth';
 
 
 function App(): JSX.Element {
  
   return (
     <SafeAreaView style={{backgroundColor: color.White, flex: 1}}>
-      <UploadImage/>
+      <Auth/>
     </SafeAreaView>
   );
 }
