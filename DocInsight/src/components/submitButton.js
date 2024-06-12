@@ -7,6 +7,7 @@ import {
   } from 'react-native';
   import React from 'react';
   import scale from '../constants/responsive';
+import FONT_FAMILY from '../constants/fonts';
   
   const SubmitButton = props => {
     return (
@@ -30,15 +31,15 @@ import {
   const styles = StyleSheet.create({
     container: {
       borderRadius: 12,
-      width: scale(275),
-      height: scale(43),
+      width: scale(339),
+      height: scale(55),
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
     },
     text: {
-      fontSize: scale(16),
+      fontSize: scale(18),
       textAlign: 'center',
-      fontWeight: '700',
+      fontFamily: FONT_FAMILY.SemiBold
     },
   });
