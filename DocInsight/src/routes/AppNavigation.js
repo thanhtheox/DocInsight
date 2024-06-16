@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import OnboardingScreen from '../screens/onboarding';
+import InfoInput from '../components/infoInput';
 
 
 const AppStack = createNativeStackNavigator();
@@ -19,7 +19,7 @@ const AppStackScreen = () => {
 
   return (
     <AppStack.Navigator
-      initialRouteName="OnboardingScreen"
+      initialRouteName="InfoInput"
       screenOptions={{headerShown: false}}>
       {/* {userInfo.emailVerified === true ? (
         <>
@@ -29,7 +29,7 @@ const AppStackScreen = () => {
           />
         </>
       ) : ( */}
-        <AppStack.Screen name="OnboardingScreen" component={OnboardingScreen} />
+        <AppStack.Screen name="InfoInput" component={InfoInput} />
       {/* )} */}
     </AppStack.Navigator>
   );
