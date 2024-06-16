@@ -21,13 +21,14 @@ import OnboardingScreen from './src/screens/onboarding';
 import UploadImage from './src/components/uploadImage';
 import SwitchSelector from './src/screens/auth/switchSelector';
 import Auth from './src/screens/auth/auth';
+import InfoInput from './src/components/infoInput';
 
 
 function App(): JSX.Element {
  
   return (
     <SafeAreaView style={{backgroundColor: color.White, flex: 1}}>
-      <Auth/>
+      <InfoInput/>
     </SafeAreaView>
   );
 }
