@@ -8,6 +8,7 @@ import {
   import React from 'react';
   import scale from '../constants/responsive';
 import FONT_FAMILY from '../constants/fonts';
+import color from '../constants/color';
   
   const SubmitButton = props => {
     return (
@@ -22,6 +23,13 @@ import FONT_FAMILY from '../constants/fonts';
         onPress={props.onPress}
         disabled={props.disabled}>
         <Text style={[styles.text, {color: props.color}]}>{props.text}</Text>
+        {props.loading ? (
+          <ActivityIndicator
+            size="large"
+            color={color.White}
+            style={{position: 'absolute', right: scale(20)}}
+          />
+        ) : null}
       </TouchableOpacity>
     );
   };

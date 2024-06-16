@@ -4,38 +4,32 @@ import scale from '../../constants/responsive';
 import color from '../../constants/color';
 import FONT_FAMILY from '../../constants/fonts';
 
-const SwitchSelector = ({ onSelect }) => {
-  const [selected, setSelected] = useState('login');
-
-  const handleSelect = (value) => {
-    setSelected(value);
-    onSelect(value);
-  };
+const SwitchSelector = ({ navigate, screen }) => {
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={[
           styles.button,
-          selected === 'login' && styles.selectedButton,
+          screen === 'SignIn' && styles.selectedButton,
         ]}
-        onPress={() => handleSelect('login')}
+        onPress={navigate}
       >
         <Text style={[
           styles.buttonText,
-          selected === 'login' && styles.selectedButtonText,
+          screen === 'SignIn' && styles.selectedButtonText,
         ]}>Đăng nhập</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.button,
-          selected === 'register' && styles.selectedButton,
+          screen === 'SignUp' && styles.selectedButton,
         ]}
-        onPress={() => handleSelect('register')}
+        onPress={navigate}
       >
         <Text style={[
           styles.buttonText,
-          selected === 'register' && styles.selectedButtonText,
+          screen === 'SignUp' && styles.selectedButtonText,
         ]}>Đăng kí</Text>
       </TouchableOpacity>
     </View>

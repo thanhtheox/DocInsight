@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://medicalxai-api.blackwave-b37c5d34.eastus.azurecontainerapps.io';

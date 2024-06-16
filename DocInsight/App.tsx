@@ -12,31 +12,22 @@ import {
 } from 'react-native';
 import FONT_FAMILY from './src/constants/fonts';
 import color from './src/constants/color';
-import SubmitButton from './src/components/submitButton';
-import scale from './src/constants/responsive';
-import Header from './src/components/header';
-import Onboarding from './src/screens/onboarding';
-import { IMG_Onboard1 } from './src/assets/images';
 import OnboardingScreen from './src/screens/onboarding';
-import UploadImage from './src/components/uploadImage';
-import SwitchSelector from './src/screens/auth/switchSelector';
-import Auth from './src/screens/auth/auth';
+import SignInScreen from './src/screens/auth/signIn';
+import SignUpScreen from './src/screens/auth/signUp';
+import { AuthStackScreen } from './src/routes/AuthNavigation';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthProvider } from './src/context/AuthProvider';
+import RootNavigator from './src/routes/RootNavigation';
 
 
-function App(): JSX.Element {
- 
+const App = (props: any) => {
   return (
-    <SafeAreaView style={{backgroundColor: color.White, flex: 1}}>
-      <Auth/>
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ backgroundColor: color.White, flex: 1 }}>
+      <AuthProvider>
+        <RootNavigator {...props} />
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
- hello: {
-  fontFamily: FONT_FAMILY.SemiBold,
-  color: color.Blue, 
- }
-});
-
 export default App;
