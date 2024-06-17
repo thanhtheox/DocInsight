@@ -139,7 +139,7 @@ const SignInScreen = (props) => {
                       setPassword(password),
                     ]}
                     value={value}
-                    placeholder="Password"
+                    placeholder="*Password"
                     placeholderTextColor={color.Description}
                     style={styles.inputText}
                   />

@@ -17,13 +17,13 @@ import { IC_Camera, IC_Library } from '../assets/icons';
       <SafeAreaView style={styles.container}>
         <TouchableOpacity
           style={styles.camera}
-          onPress={props.onPress}>
+          onPress={props.onPressTake}>
             <IC_Camera/>
           <Text style={styles.text1}>Chụp ảnh</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.upload}
-          onPress={props.onPress}>
+          onPress={props.onPressPick}>
             <IC_Library/>
           <Text style={styles.text2}>Tải ảnh lên</Text>
           

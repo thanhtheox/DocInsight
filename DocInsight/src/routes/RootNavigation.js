@@ -21,9 +21,9 @@ const RootStackScreen = props => {
       screenOptions={{headerShown: false}}>
         {!auth?.accessToken ? (
           <>
-        <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
-        <RootStack.Screen name="AppStackScreen" component={AppStackScreen} />
-        </>
+            <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
+            <RootStack.Screen name="AppStackScreen" component={AppStackScreen} />
+          </>
         ):(
         <RootStack.Screen name="AppStackScreen" component={AppStackScreen} />
         )}

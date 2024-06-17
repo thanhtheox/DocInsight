@@ -2,35 +2,25 @@ import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import InfoInput from '../components/infoInput';
+import HomeScreen from '../screens/app/home';
+import Header from '../components/header';
 
 
 const AppStack = createNativeStackNavigator();
 
 const AppStackScreen = () => {
-//   const user = useSelector(state => state.user);
-//   const {userItems} = user;
-//   const userInfo = userItems.user;
-//   const axiosPrivate = useAxiosPrivate();
-//   const dispatch = useDispatch();
-//   const cart = useSelector(state => state.cart);
-//   const {cartItems} = cart;
-//   const {cartId} = cart;
 
   return (
     <AppStack.Navigator
-      initialRouteName="InfoInput"
-      screenOptions={{headerShown: false}}>
-      {/* {userInfo.emailVerified === true ? (
-        <>
-          <AppStack.Screen
-            name="AppStackWithVerifyScreen"
-            component={AppStackWithVerifyScreen}
-          />
-        </>
-      ) : ( */}
-        <AppStack.Screen name="InfoInput" component={InfoInput} />
-      {/* )} */}
+      initialRouteName="HomeScreen"
+      screenOptions={{
+        headerShown: true,
+        headerBackVisible: false,
+      }}>
+        <AppStack.Screen name="HomeScreen" component={HomeScreen} 
+          options={({navigation}) => ({
+            headerTitle: () => <Header navigation={navigation} />,
+          })}/>
     </AppStack.Navigator>
   );
 };

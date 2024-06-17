@@ -12,7 +12,7 @@ import scale from '../constants/responsive';
 import {IC_Drawer, IC_Logo} from '../assets/icons';
 import {IMG_Logo} from '../assets/images';
 
-const Header = props => {
+const Header = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.viewIcon}>
