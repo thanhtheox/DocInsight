@@ -14,3 +14,5 @@ export {default as IC_Show} from './IC_Show';
 export {default as IC_Hide} from './IC_Hide';
 export {default as IC_Logo} from './IC_Logo';
 export {default as IC_Skip} from './IC_Skip';
+export {default as IC_Search} from './IC_Search';
+export {default as IC_Add} from './IC_Add';

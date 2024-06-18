@@ -45,7 +45,7 @@ const HomeScreen = () => {
     const [predictResults, setPredictResults] = useState([]);
     const { auth } = useAuth();
     const axiosPrivate = useAxiosPrivate();
-    const currentYear = new Date();
+    const currentYear = new Date().getFullYear();
 
     const openUrl = async url => {
         try {
@@ -151,8 +151,8 @@ const HomeScreen = () => {
                                         color: color.Description,
                                         fontFamily: FONT_FAMILY.Regular,
                                     }}>
-                                        {item.patientId.gender === 'male' ? `Anh ${item.patientId.name} - ${currentYear.getFullYear() - item.patientId.birthday} tuổi`
-                                        :` Chị ${item.patientId.name} - ${currentYear.getFullYear() - item.patientId.birthday} tuổi`}
+                                        {item.patientId.gender === 'male' ? `Anh ${item.patientId.name} - ${currentYear - item.patientId.birthday} tuổi`
+                                        :` Chị ${item.patientId.name} - ${currentYear - item.patientId.birthday} tuổi`}
                                     </Text>
                                     <Text style={{
                                         fontSize: scale(15),
