@@ -26,6 +26,7 @@ const PatientProfileListScreen = (props) => {
             try {
                 const response = await axiosPrivate.get(`/patients/${auth.userId}`);
                 setPatients(response.data);
+                setSearchResults(response.data);
               } catch (err) {
                 console.log(err.response.data);
               }
@@ -36,16 +37,17 @@ const PatientProfileListScreen = (props) => {
     const searchFilterFunction = text => {
         if (text) {
             const searchText = text.toLowerCase();
-            const filteredPatients = patients.filter(function (item) {
-            return (
-                item.name.toLowerCase().includes(searchText) ||
-                item.createdAt.includes(searchText)
-            );
+            const filteredPatients = patients.filter((item) => {
+                return (
+                    item.name.toLowerCase().includes(searchText) ||
+                    item.createdAt.includes(searchText)
+                );
           });
           setSearchResults(filteredPatients);
         } else {
             setSearchResults(patients);
         }
+        setPage(1);
       };
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +81,13 @@ const PatientProfileListScreen = (props) => {
         </View>
         <View style={{maxHeight: scale(800), width: '95%', flexDirection: 'column', alignSelf:'center'}}>
         {displayedPatients.map((item) => (
-            <TouchableOpacity key={item._id} style={{flexDirection: 'row',height: scale(80), marginTop: scale(10),
+            <TouchableOpacity key={item._id} 
+            onPress={() =>
+                props.navigation.navigate('PatientProfileDetailsScreen', {
+                    patient: item,
+                })
+              }
+            style={{flexDirection: 'row',height: scale(80), marginTop: scale(10),
             alignSelf: 'center', alignItems:'center', justifyContent: 'space-evenly', width: '95%',borderWidth:2, borderColor:color.Button, borderRadius:scale(15)}}>
                 <View style={{justifyContent: 'space-evenly', marginLeft: scale(5), height: scale(80)}}>
                     <Text style={{fontFamily: FONT_FAMILY.SemiBold, fontSize: scale(15), color: color.TitleActive}}>
