@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, ScrollView, RefreshControl, ActivityIndicator } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import color from '../../../constants/color'
 import scale from '../../../constants/responsive';
@@ -13,6 +13,7 @@ const PatientProfileListScreen = (props) => {
     const [patients, setPatients] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
     const itemsPerPage = 6;
     const lastPage = Math.ceil(searchResults.length / itemsPerPage);
     const firstIndex = (page - 1) * itemsPerPage;
@@ -20,17 +21,30 @@ const PatientProfileListScreen = (props) => {
     const displayedPatients = searchResults.slice(firstIndex, lastIndex);    
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
-    const currentYear = new Date().getFullYear();
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getPatients().then(() => setRefreshing(false));
+      }, []);
     useEffect(() => {
-        const getPatients = async () => {
-            try {
-                const response = await axiosPrivate.get(`/patients/${auth.userId}`);
-                setPatients(response.data);
-                setSearchResults(response.data);
-              } catch (err) {
-                console.log(err.response.data);
-              }
-        }; 
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            getPatients();
+        });
+        return unsubscribe;
+      }, [props.navigation]);
+    const getPatients = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosPrivate.get(`/patients/${auth.userId}`);
+            setPatients(response.data);
+            setSearchResults(response.data);
+            setLoading(false);
+          } catch (err) {
+            console.log(err.response.data);
+            setLoading(false);
+          }
+    }; 
+    useEffect(() => {
         getPatients();
       }, []);
 
@@ -49,8 +63,17 @@ const PatientProfileListScreen = (props) => {
         }
         setPage(1);
       };
-  return (
+  return loading ? (
+    <SafeAreaView style={[styles.container, {justifyContent: 'center'}]}>
+        <ActivityIndicator color={color.Button} size={100} />
+    </SafeAreaView>
+    ) : (
     <SafeAreaView style={styles.container}>
+        <ScrollView
+        horizontal="false"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {/* Search Bar */}
         <View style={styles.searchBar}>
             <TextInput
@@ -74,7 +97,9 @@ const PatientProfileListScreen = (props) => {
         {/* Patients List */}
         <View style={{marginLeft: scale(20), marginTop: scale(20), flexDirection:'row',justifyContent:'space-between', alignSelf:'center',alignItems:'center',width:'90%'}}>
             <Text style={styles.titlePart}>Thông tin bệnh nhân</Text>
-            <TouchableOpacity style={{marginRight: scale(5), backgroundColor:color.Button, width:scale(40), 
+            <TouchableOpacity 
+            onPress={() => props.navigation.navigate('AddPatientProfileScreen')}
+            style={{marginRight: scale(5), backgroundColor:color.Button, width:scale(40), 
                 height:scale(40), justifyContent:'center',alignItems:'center', borderRadius:scale(10)}}>
                 <IC_Add color={color.White}/>
             </TouchableOpacity>
@@ -91,8 +116,8 @@ const PatientProfileListScreen = (props) => {
             alignSelf: 'center', alignItems:'center', justifyContent: 'space-evenly', width: '95%',borderWidth:2, borderColor:color.Button, borderRadius:scale(15)}}>
                 <View style={{justifyContent: 'space-evenly', marginLeft: scale(5), height: scale(80)}}>
                     <Text style={{fontFamily: FONT_FAMILY.SemiBold, fontSize: scale(15), color: color.TitleActive}}>
-                    {item.gender === 'male' ? `Anh ${item.name} - ${currentYear - item.birthday} tuổi`
-                    :` Chị ${item.name} - ${currentYear - item.birthday} tuổi`}
+                    {item.gender === 'male' ? `Anh ${item.name} - ${item.age} tuổi`
+                    :` Chị ${item.name} - ${item.age} tuổi`}
                     </Text>
                     <Text style={{fontFamily: FONT_FAMILY.SemiBold, fontSize: scale(15), color: color.TitleActive}}>
                     {item.address}
@@ -130,6 +155,7 @@ const PatientProfileListScreen = (props) => {
                 </Text>
             </TouchableOpacity>
         </View>
+        </ScrollView>
     </SafeAreaView>
   )
 }

@@ -15,6 +15,7 @@ import color from '../constants/color';
       <TouchableOpacity
         style={[
           styles.container,
+          {width: props.width || scale(339)},
           {opacity: props.disabled ? 0.75 : 1},
           {backgroundColor: props.backgroundColor},
           {borderColor: props.borderColor},
@@ -39,7 +40,6 @@ import color from '../constants/color';
   const styles = StyleSheet.create({
     container: {
       borderRadius: 12,
-      width: scale(339),
       height: scale(55),
       justifyContent: 'center',
       alignItems: 'center',

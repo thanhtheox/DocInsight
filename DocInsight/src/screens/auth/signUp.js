@@ -83,12 +83,6 @@ const SignUpScreen = (props) => {
   });
 
   const signUpFunction = async () => {
-    console.log({
-      email: email,
-      name: name,
-      password: password,
-      gender: gender
-    });
     try {
       setLoading(true);
       const response = await axiosPrivate.post(

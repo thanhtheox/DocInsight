@@ -20,27 +20,27 @@ const createPayLoadSchema = yup.object({
     .required('Họ và tên không được để trống')
     .max(50, 'Họ và tên không được dài quá 50 kí tự'),
 
-  age: yup
+  birthday: yup
     .string()
     .matches(
       /^(?:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]?)$/,
       'Định dạng năm chưa đúng',
     ),
   address: yup.string(),
-  desease: yup.string().required('Vui lòng chọn bệnh liên quan'),
+  disease: yup.string().required('Vui lòng chọn bệnh liên quan'),
 });
 
 const InfoInput = props => {
-  const [name, setName] = useState(''); // Move useState inside the component function
-  const [age, setAge] = useState('');
+  const [name, setName] = useState('');
+  const [birthday, setBirthday] = useState('');
   const [address, setAddress] = useState('');
   const [showDropDown, setShowDropDown] = useState(false);
-  const [desease, setDesease] = useState('');
-  const [gender, setGender] = useState('Female'); // Initialize with a default value
-  const deseaseList = [
+  const [disease, setDisease] = useState('');
+  const [gender, setGender] = useState('male');
+  const diseaseList = [
     {
       label: 'Phổi',
-      value: 'phổi',
+      value: 'lung',
     },
   ];
   const {
@@ -50,9 +50,9 @@ const InfoInput = props => {
     mode: 'onChange',
     defaultValues: {
       name: '',
-      age: '',
+      birthday: '',
       address: '',
-      desease: '',
+      disease: '',
     },
     resolver: yupResolver(createPayLoadSchema),
   });
@@ -91,27 +91,27 @@ const InfoInput = props => {
           )}
         />
 
-        {/* ageInput */}
+        {/* birthdayInput */}
         <Controller
-          name="age"
+          name="birthday"
           control={controlCreate}
           render={({field: {onChange, value}}) => (
             <View style={styles.inputBox}>
               <View style={styles.viewInput}>
                 <TextInput
-                  onChangeText={age => {
-                    onChange(age);
-                    setAge(age); // Update the age state
+                  onChangeText={birthday => {
+                    onChange(birthday);
+                    setBirthday(birthday); // Update the age state
                   }}
                   value={value}
-                  placeholder="Năm sinh"
+                  placeholder="*Năm sinh"
                   placeholderTextColor={color.Description}
                   style={styles.inputText}
                 />
               </View>
-              {errorsCreate?.age && (
+              {errorsCreate?.birthday && (
                 <Text style={styles.textFailed}>
-                  {errorsCreate.age.message}
+                  {errorsCreate.birthday.message}
                 </Text>
               )}
             </View>
@@ -128,17 +128,17 @@ const InfoInput = props => {
                 <TextInput
                   onChangeText={address => {
                     onChange(address);
-                    setName(address); // Update the name state
+                    setAddress(address); // Update the name state
                   }}
-                  placeholder="Địa chỉ"
+                  placeholder="*Địa chỉ"
                   placeholderTextColor={color.Description}
                   value={value}
                   style={styles.inputText}
                 />
               </View>
-              {errorsCreate?.name && (
+              {errorsCreate?.address && (
                 <Text style={styles.textFailed}>
-                  {errorsCreate.name.message}
+                  {errorsCreate.address.message}
                 </Text>
               )}
             </View>
@@ -146,7 +146,7 @@ const InfoInput = props => {
         />
         <View style={styles.inputBox}>
           <Controller
-            name="desease"
+            name="disease"
             defaultValue={5}
             control={controlCreate}
             render={({field: {onChange, value}}) => (
@@ -154,10 +154,10 @@ const InfoInput = props => {
                 listMode="SCROLLVIEW"
                 textStyle={styles.inputText}
                 open={showDropDown}
-                value={desease}
-                items={deseaseList}
+                value={disease}
+                items={diseaseList}
                 setOpen={setShowDropDown}
-                setValue={setDesease}
+                setValue={setDisease}
                 placeholder="Bệnh liên quan"
                 placeholderTextColor={color.Description}
                 onChangeValue={onChange}
@@ -171,11 +171,11 @@ const InfoInput = props => {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
               <View style={styles.radioOption}>
-                <RadioButton value="Female" color={color.Button} />
+                <RadioButton value="male" color={color.Button} />
                 <Text style={{color: color.TitleActive}}>Nam</Text>
               </View>
               <View style={styles.radioOption}>
-                <RadioButton value="Male" color={color.Button} />
+                <RadioButton value="female" color={color.Button} />
                 <Text style={{color: color.TitleActive}}>Nữ</Text>
               </View>
             </View>

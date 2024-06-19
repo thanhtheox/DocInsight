@@ -1,16 +1,17 @@
-import { Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../../constants/color'
 import scale from '../../../constants/responsive'
 import FONT_FAMILY from '../../../constants/fonts'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
+import { IC_Edit } from '../../../assets/icons'
 
 const {width: screenWidth, height: screenHeight } = Dimensions.get('window'); 
 const PatientProfileDetailsScreen = (props) => {
     const axiosPrivate = useAxiosPrivate();
     const {patient} = props.route.params;
+    const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([]);
-    const currentYear = new Date().getFullYear();
     const [page, setPage] = useState(1);
     const itemsPerPage = 3;
     const lastPage = Math.ceil(results.length / itemsPerPage);
@@ -20,6 +21,7 @@ const PatientProfileDetailsScreen = (props) => {
     
     useEffect(() => {
         const getResultsByPatientId = async (id) => {
+            setLoading(true);
             try {
                 const response = await axiosPrivate.get(`/results-by-patient/${id}`);
                 response.data.map((item) => {
@@ -31,7 +33,9 @@ const PatientProfileDetailsScreen = (props) => {
                     }
                 });
                 setResults(response.data);
+                setLoading(false);
               } catch (err) {
+                setLoading(false);
                 console.log(err.response.data);
               }
         }; 
@@ -42,12 +46,16 @@ const PatientProfileDetailsScreen = (props) => {
     <SafeAreaView style={styles.container}>
         {/* Patient Info */}
         <Text style={styles.titlePart}>Thông tin bệnh nhân</Text>
-        <TouchableOpacity style={{flexDirection: 'row',height: scale(80), marginTop: scale(10),
+        <TouchableOpacity 
+        onPress={() => props.navigation.navigate('EditPatientProfileScreen', {
+            patient: patient,
+        })}
+        style={{flexDirection: 'row',height: scale(80), marginTop: scale(10),
         alignSelf: 'center', alignItems:'center', justifyContent: 'space-evenly', width: '95%',borderWidth:2, borderColor:color.Button, borderRadius:scale(15)}}>
             <View style={{justifyContent: 'space-evenly', marginLeft: scale(5), height: scale(80)}}>
                 <Text style={{fontFamily: FONT_FAMILY.SemiBold, fontSize: scale(15), color: color.TitleActive}}>
-                {patient.gender === 'male' ? `Anh ${patient.name} - ${currentYear - patient.birthday} tuổi`
-                :` Chị ${patient.name} - ${currentYear - patient.birthday} tuổi`}
+                {patient.gender === 'male' ? `Anh ${patient.name} - ${patient.age} tuổi`
+                :` Chị ${patient.name} - ${patient.age} tuổi`}
                 </Text>
                 <Text style={{fontFamily: FONT_FAMILY.SemiBold, fontSize: scale(15), color: color.TitleActive}}>
                 {patient.address}
@@ -61,51 +69,61 @@ const PatientProfileDetailsScreen = (props) => {
                 {patient.createdAt?.split('T')[0]}
                 </Text>
             </View>
+            <IC_Edit marginTop={scale(20)}/>
         </TouchableOpacity>
         {/* Predict results */}
         {results.length > 0 ? (<Text style={styles.titlePart}>Các kết quả</Text>):(null)}
         <View style={{marginTop: scale(10), height: scale(450), width: '95%', flexDirection: 'column', alignSelf:'center'}}>
-        {results.length > 0 ? (displayedResults.map((item) => (
-            <TouchableOpacity key={item._id} style={{width: screenWidth, height: scale(130),flexDirection:'row', justifyContent: 'center', alignSelf:'center', marginTop: scale(10)}}>
-                <View style={{backgroundColor:'#F1F1F1', borderRadius: scale(15),height:'100%', borderWidth:1, borderColor:'#F1F1F1',
-                    width:'85%',flexDirection:'row-reverse',justifyContent:'space-between'}}>
-                    <Image source={{uri: item.resultImage}} style={{
-                        justifyContent:'flex-end',
-                        height: '100%',
-                        width: '50%',
-                        borderTopRightRadius: scale(15),
-                        borderBottomRightRadius:scale(15)
-                    }} resizeMode='stretch'/>
-                    <View style={{marginLeft: scale(20),alignSelf: 'center'}}>
-                        <Text style={{
-                            fontSize: scale(15),
-                            color: color.Description,
-                            fontFamily: FONT_FAMILY.Regular,
-                        }}>{`Dự đoán:`}</Text>
-                        <Text style={{
-                            fontSize: scale(15),
-                            color: color.Description,
-                            fontFamily: FONT_FAMILY.Regular,
-                        }}>{item.resultLabel}</Text>
-                        <Text style={{
-                            fontSize: scale(15),
-                            color: color.Description,
-                            fontFamily: FONT_FAMILY.Regular,
-                        }}>
-                            {item.createdAt?.split('T')[0]}
-                        </Text>
-                    </View> 
-                </View>
-            </TouchableOpacity>
-        ))):(
-            <View style={{alignSelf: 'center', marginTop: scale(200)}}>
-                <Text style={{
-                    fontSize: scale(30),
-                    color: color.TitleActive,
-                    fontFamily: FONT_FAMILY.SemiBold,
-                }}>{`Chưa có kết quả dự đoán nào!`}
-                </Text>
-            </View> 
+        {loading === true ? (
+            <ActivityIndicator
+            size={scale(100)}
+            color={color.Button}
+            style={{alignSelf: 'center', justifyContent:'center', marginTop: scale(200)}}
+          />
+        ) : (
+            results.length > 0 ? (
+                displayedResults.map((item) => (
+                    <TouchableOpacity key={item._id} style={{width: screenWidth, height: scale(130), flexDirection: 'row', justifyContent: 'center', alignSelf: 'center', marginTop: scale(10)}}>
+                        <View style={{backgroundColor: '#F1F1F1', borderRadius: scale(15), height: '100%', borderWidth: 1, borderColor: '#F1F1F1', width: '85%', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
+                            <Image source={{uri: item.resultImage}} style={{
+                                justifyContent: 'flex-end',
+                                height: '100%',
+                                width: '60%',
+                                borderTopRightRadius: scale(15),
+                                borderBottomRightRadius: scale(15)
+                            }} resizeMode='stretch'/>
+                            <View style={{marginLeft: scale(20), alignSelf: 'center'}}>
+                                <Text style={{
+                                    fontSize: scale(15),
+                                    color: color.Description,
+                                    fontFamily: FONT_FAMILY.Regular,
+                                }}>{`Dự đoán:`}</Text>
+                                <Text style={{
+                                    fontSize: scale(15),
+                                    color: color.Description,
+                                    fontFamily: FONT_FAMILY.Regular,
+                                }}>{item.resultLabel}</Text>
+                                <Text style={{
+                                    fontSize: scale(15),
+                                    color: color.Description,
+                                    fontFamily: FONT_FAMILY.Regular,
+                                }}>
+                                    {item.createdAt?.split('T')[0]}
+                                </Text>
+                            </View> 
+                        </View>
+                    </TouchableOpacity>
+                ))
+            ) : (
+                <View style={{alignSelf: 'center', marginTop: scale(200)}}>
+                    <Text style={{
+                        fontSize: scale(30),
+                        color: color.TitleActive,
+                        fontFamily: FONT_FAMILY.SemiBold,
+                    }}>{`Chưa có kết quả dự đoán nào!`}
+                    </Text>
+                </View> 
+            )
         )}
         </View>
         {results.length > 0 ? (<View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginVertical:scale(10)}}>
