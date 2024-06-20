@@ -62,7 +62,8 @@ const HomeScreen = () => {
                 const response = await axios.get(
                     'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=352de5f4d69d436f9b25738cfae73096',
                 );
-                setNews(response.data.articles);
+                var data = response.data.articles.filter((item) => item.title != "[Removed]");
+                setNews(data);
             } catch (err) {
                 console.log('err', err);
             }
@@ -78,9 +79,12 @@ const HomeScreen = () => {
                         case 'Tuberculosis': item.resultLabel = 'Bệnh Lao'; break;
                     }
                 })
-                setPredictResults(response.data);
+                if(response.data.length > 5)
+                    setPredictResults(response.data.slice(0,5));
+                else
+                    setPredictResults(response.data);
               } catch (err) {
-                console.log(err.response.data);
+                console.log(err);
               }
         }; 
         getPredictResults();
@@ -188,7 +192,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
             ))}
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginBottom:scale(10)}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginBottom:scale(100)}}>
                 <TouchableOpacity
                     onPress={() => setPageNews(pageNews > 1 ? pageNews - 1 : pageNews)}
                     disabled={pageNews === 1}

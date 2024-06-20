@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import {Controller, useForm} from 'react-hook-form';
 import {RadioButton} from 'react-native-paper';
@@ -18,18 +18,21 @@ const createPatientSchema = yup.object({
       .required('Họ và tên không được để trống')
       .max(50, 'Họ và tên không được dài quá 50 kí tự'),
   
-    birthday: yup
-      .string()
-      .matches(
-        /^(?:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]?)$/,
+      birthday: yup
+      .number()
+      .test(
+        'isValidYear',
         'Định dạng năm chưa đúng',
+        function(value) {
+          return /^(?:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]?)$/.test(value);
+        }
       ),
     address: yup.string(),
     disease: yup.string().required('Vui lòng chọn bệnh liên quan'),
   });
 const AddPatientProfileScreen = (props) => {
     const [name, setName] = useState('');
-    const [birthday, setBirthday] = useState('');
+    const [birthday, setBirthday] = useState();
     const [address, setAddress] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -88,6 +91,7 @@ const AddPatientProfileScreen = (props) => {
     };
   return (
     <SafeAreaView style={styles.container}>
+        <ScrollView>
         <Text style={styles.titlePart}>Thêm bệnh nhân</Text>
         <View style={styles.form}>
             {/* nameInput */}
@@ -132,6 +136,7 @@ const AddPatientProfileScreen = (props) => {
                     value={value}
                     placeholder="*Năm sinh"
                     placeholderTextColor={color.Description}
+                    keyboardType='numeric'
                     style={styles.inputText}
                     />
                 </View>
@@ -227,6 +232,7 @@ const AddPatientProfileScreen = (props) => {
                 onPress={handleCreate(createFunction)}
             />
         </View>
+        </ScrollView>
     </SafeAreaView>
   )
 }
@@ -289,6 +295,7 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         marginTop: scale(40),
+        marginBottom: scale(100),
         alignSelf: 'center',
         width:'90%',
         justifyContent:'space-around',

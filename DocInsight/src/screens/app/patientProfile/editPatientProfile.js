@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import {Controller, useForm} from 'react-hook-form';
 import {RadioButton} from 'react-native-paper';
@@ -117,6 +117,7 @@ const EditPatientProfileScreen = (props) => {
     };
   return (
     <SafeAreaView style={styles.container}>
+        <ScrollView>
         <Text style={styles.titlePart}>Chỉnh sửa bệnh nhân</Text>
         <View style={styles.form}>
             {/* nameInput */}
@@ -257,7 +258,7 @@ const EditPatientProfileScreen = (props) => {
                 onPress={handleEdit(editFunction)}
             />
         </View>
-        <View style={{marginTop:scale(10), alignSelf:'center'}}>
+        <View style={{marginTop:scale(10), alignSelf:'center', marginBottom: scale(100)}}>
             <SubmitButton
                 text={'Xóa bệnh nhân'}
                 backgroundColor={color.Warning}
@@ -266,6 +267,7 @@ const EditPatientProfileScreen = (props) => {
                 onPress={deleteFunction}
             />
         </View>
+        </ScrollView>
     </SafeAreaView>
   )
 }

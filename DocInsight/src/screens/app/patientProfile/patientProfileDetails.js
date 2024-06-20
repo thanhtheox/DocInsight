@@ -1,4 +1,4 @@
-import { Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
+import { Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, ActivityIndicator, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../../constants/color'
 import scale from '../../../constants/responsive'
@@ -44,6 +44,7 @@ const PatientProfileDetailsScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+        <ScrollView>
         {/* Patient Info */}
         <Text style={styles.titlePart}>Thông tin bệnh nhân</Text>
         <TouchableOpacity 
@@ -126,7 +127,8 @@ const PatientProfileDetailsScreen = (props) => {
             )
         )}
         </View>
-        {results.length > 0 ? (<View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginVertical:scale(10)}}>
+        {results.length > 0 ? (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginTop:scale(10), marginBottom: scale(100)}}>
             <TouchableOpacity
                 onPress={() => setPage(page > 1 ? page - 1 : page)}
                 disabled={page === 1}
@@ -136,7 +138,7 @@ const PatientProfileDetailsScreen = (props) => {
                     {'<'}
                 </Text>
             </TouchableOpacity>
-            <Text style={{ color: color.Button, fontSize: scale(25), fontFamily: FONT_FAMILY.SemiBold }}>{page}</Text>
+            {results.length > 3 && <Text style={{ color: color.Button, fontSize: scale(25), fontFamily: FONT_FAMILY.SemiBold }}>{page}</Text>}
             <TouchableOpacity
                 onPress={() => setPage(page < lastPage ? page + 1 : page)}
                 disabled={page === lastPage}
@@ -147,6 +149,7 @@ const PatientProfileDetailsScreen = (props) => {
                 </Text>
             </TouchableOpacity>
         </View>):(null)}
+        </ScrollView>
     </SafeAreaView>
   )
 }

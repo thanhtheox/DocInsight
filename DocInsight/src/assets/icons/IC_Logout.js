@@ -10,11 +10,8 @@ const SvgComponent = (props) => (
     {...props}
   >
     <Path
-      stroke={props.color}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M15.05 9H5.5a2.5 2.5 0 0 1 0-5h9.55m-6.1 16h9.55a2.5 2.5 0 0 0 0-5H8.95M3 17.5a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Zm18-11a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+      fill={props.color}
+      d="m13.166 3.833-1.175 1.175 2.15 2.159H5.667v1.666h8.476l-2.15 2.15 1.174 1.184L17.334 8l-4.166-4.167ZM2.333 2.167H9V.5H2.333C1.416.5.667 1.25.667 2.167v11.666c0 .917.75 1.667 1.666 1.667H9v-1.667H2.333V2.167Z"
     />
   </Svg>
 )

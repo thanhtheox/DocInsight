@@ -134,7 +134,7 @@ const PatientProfileListScreen = (props) => {
             </TouchableOpacity>
         ))}
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginVertical:scale(10)}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center',marginTop:scale(10), marginBottom:scale(100)}}>
             <TouchableOpacity
                 onPress={() => setPage(page > 1 ? page - 1 : page)}
                 disabled={page === 1}
@@ -144,7 +144,7 @@ const PatientProfileListScreen = (props) => {
                     {'<'}
                 </Text>
             </TouchableOpacity>
-            <Text style={{ color: color.Button, fontSize: scale(25), fontFamily: FONT_FAMILY.SemiBold }}>{page}</Text>
+            {searchResults.length > 6 && <Text style={{ color: color.Button, fontSize: scale(25), fontFamily: FONT_FAMILY.SemiBold }}>{page}</Text>}
             <TouchableOpacity
                 onPress={() => setPage(page < lastPage ? page + 1 : page)}
                 disabled={page === lastPage}

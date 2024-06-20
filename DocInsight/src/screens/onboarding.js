@@ -36,7 +36,7 @@ const OnboardingScreen = (props) => {
                 />      
             </View>
             <TouchableOpacity style={styles.skip} onPress={() => props.navigation.navigate('SignInScreen')}>
-                <Text style={styles.skipText}>Skip</Text>
+                <Text style={styles.skipText}>Bỏ qua</Text>
                 {/* <IC_Skip/> */}
             </TouchableOpacity>
         </ScrollView>
