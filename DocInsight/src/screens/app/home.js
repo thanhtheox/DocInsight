@@ -15,7 +15,7 @@ import useAuth from '../../hooks/useAuth';
 
 
 const {width: screenWidth, height: screenHeight } = Dimensions.get('window'); 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
     
     const banners = [
         {source: IMG_Onboard1, text: "Dự đoán bệnh lý liên quan đến phổi", id:0 },
@@ -140,7 +140,15 @@ const HomeScreen = () => {
                     data={predictResults}
 
                     renderItem={({ item }) => (
-                        <TouchableOpacity key={item._id} style={{width: screenWidth,flexDirection:'row', justifyContent: 'center', alignSelf:'center'}}>
+                        <TouchableOpacity key={item._id} 
+                        onPress={() => props.navigation.navigate('Predict', {
+                            screen: 'PredictResultScreen',
+                            params: {
+                                patient: item.patientId,
+                                result: item
+                            },
+                          })}
+                        style={{width: screenWidth,flexDirection:'row', justifyContent: 'center', alignSelf:'center'}}>
                             <View style={{backgroundColor:'#F1F1F1', borderRadius: scale(15),height:'100%', width:'85%',flexDirection:'row-reverse',justifyContent:'space-between'}}>
                                 <Image source={{uri: item.inputImage}} style={{
                                     justifyContent:'flex-end',

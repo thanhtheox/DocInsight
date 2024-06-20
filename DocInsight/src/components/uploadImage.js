@@ -6,8 +6,8 @@ import {
     ActivityIndicator,
     SafeAreaView,
   } from 'react-native';
-  import React from 'react';
-  import scale from '../constants/responsive';
+import React from 'react';
+import scale from '../constants/responsive';
 import color from '../constants/color';
 import FONT_FAMILY from '../constants/fonts';
 import { IC_Camera, IC_Library } from '../assets/icons';

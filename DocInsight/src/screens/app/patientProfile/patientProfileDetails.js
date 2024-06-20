@@ -84,7 +84,15 @@ const PatientProfileDetailsScreen = (props) => {
         ) : (
             results.length > 0 ? (
                 displayedResults.map((item) => (
-                    <TouchableOpacity key={item._id} style={{width: screenWidth, height: scale(130), flexDirection: 'row', justifyContent: 'center', alignSelf: 'center', marginTop: scale(10)}}>
+                    <TouchableOpacity key={item._id} 
+                    onPress={() => props.navigation.navigate('Predict', {
+                        screen: 'PredictResultScreen',
+                        params: {
+                            patient: item.patientId,
+                            result: item
+                        },
+                      })}
+                    style={{width: screenWidth, height: scale(130), flexDirection: 'row', justifyContent: 'center', alignSelf: 'center', marginTop: scale(10)}}>
                         <View style={{backgroundColor: '#F1F1F1', borderRadius: scale(15), height: '100%', borderWidth: 1, borderColor: '#F1F1F1', width: '85%', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
                             <Image source={{uri: item.resultImage}} style={{
                                 justifyContent: 'flex-end',

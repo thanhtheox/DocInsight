@@ -1,5 +1,6 @@
-const designWidth = 390;
 import {Dimensions} from 'react-native';
+
+const designWidth = 390;
 
 function scale(number) {
   let scaleNumber;
