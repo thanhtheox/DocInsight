@@ -187,6 +187,9 @@ const AddPatientProfileScreen = (props) => {
                     open={showDropDown}
                     value={disease}
                     items={diseaseList}
+                    showTickIcon={false}
+                    selectedItemContainerStyle={{backgroundColor: color.Button}}
+                    selectedItemLabelStyle={{color: color.White, fontSize: scale(14), marginLeft: scale(5),}}
                     setOpen={setShowDropDown}
                     setValue={setDisease}
                     placeholder="Bệnh liên quan"
@@ -253,41 +256,41 @@ const styles = StyleSheet.create({
     },
     form: {
         alignItems: 'center',
-        paddingTop: 10,
+        paddingTop: scale(10),
       },
     inputBox: {
-        paddingTop: 20,
-        width: 339,
-        height: 100,
+        paddingTop: scale(20),
+        width: scale(339),
+        height: scale(100),
         justifyContent: 'center',
     },
     viewInput: {
-        height: 55,
+        height: scale(55),
         borderWidth: 1,
         justifyContent: 'center',
         borderColor: color.TitleActive,
-        borderRadius: 12,
+        borderRadius: scale(12),
     },
     inputText: {
         color: color.TitleActive,
         fontSize: 14,
-        marginLeft: 5,
+        marginLeft: scale(5),
     },
     genderContainer: {
-        width: 339,
-        marginTop: 20,
-        padding: 10,
+        width: scale(339),
+        marginTop: scale(20),
+        padding: scale(10),
     },
     radioOption: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight: 10,
+        marginRight: scale(10),
     },
     textFailed: {
-        paddingLeft: 10,
-        marginTop: 7,
+        paddingLeft: scale(10),
+        marginTop: scale(7),
         justifyContent: 'center',
-        fontSize: 12,
+        fontSize: scale(12),
         color: 'red',
     },
     dropdown: {

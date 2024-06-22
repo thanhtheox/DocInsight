@@ -11,6 +11,7 @@ import AddPatientProfileScreen from '../screens/app/patientProfile/addPatientPro
 import EditPatientProfileScreen from '../screens/app/patientProfile/editPatientProfile';
 
 import PredictResultScreen from '../screens/app/predict/predictResult';
+import PredictInputScreen from '../screens/app/predict/predictInput';
 
 import SettingsScreen from '../screens/app/settings';
 
@@ -46,11 +47,12 @@ const PredictStackScreen = () => {
 
   return (
     <PredictStack.Navigator
-      initialRouteName="PredictResultScreen"
+      initialRouteName="PredictInputScreen"
       screenOptions={{
         headerShown: false,
         headerBackVisible: false,
       }}>
+        <PredictStack.Screen name="PredictInputScreen" component={PredictInputScreen} />
         <PredictStack.Screen name="PredictResultScreen" component={PredictResultScreen} />
     </PredictStack.Navigator>
   );

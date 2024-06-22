@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import axios from 'axios';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { useDispatch } from 'react-redux';
 
 import { IMG_Onboard1, IMG_Onboard2, IMG_Onboard3 } from '../../assets/images';
 import color from '../../constants/color';
@@ -11,6 +12,8 @@ import FONT_FAMILY from '../../constants/fonts';
 import UploadImage from '../../components/uploadImage';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import useAuth from '../../hooks/useAuth';
+import { saveInput } from '../../redux/actions/resultActions';
+
 
 
 
@@ -22,14 +25,17 @@ const HomeScreen = (props) => {
         {source: IMG_Onboard2, text: "Khoanh vùng những điểm bất thường", id:1 },
         {source: IMG_Onboard3, text: "Hỗ trợ lưu lịch sử dự đoán", id:2 },
     ];
-    const [photo, setPhoto] = useState(null);
+    const dispatch = useDispatch();
     const takePhoto = async () => {
         const result = await launchCamera({
           savePhotos: true,
           mediaType: 'photo',
         });
         if (!result.canceled) {
-          setPhoto(result.assets[0].uri);
+          dispatch(saveInput(result.assets[0].uri));
+          props.navigation.navigate('Predict', {
+            screen: 'PredictInputScreen'
+          });
         }
       };
       const pickPhoto = async () => {
@@ -38,7 +44,10 @@ const HomeScreen = (props) => {
           mediaType: 'photo',
         });
         if (!result.canceled) {
-          setPhoto(result.assets[0].uri);
+          dispatch(saveInput(result.assets[0].uri));
+          props.navigation.navigate('Predict', {
+            screen: 'PredictInputScreen',
+          });
         }
       };
 

@@ -6,16 +6,22 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+
 import scale from '../constants/responsive';
 import {IC_Logout} from '../assets/icons';
 import {IMG_Logo} from '../assets/images';
 import color from '../constants/color';
 import useLogout from '../hooks/useLogout';
+import { resetInput } from '../redux/actions/resultActions';
 
-const Header = ({navigation}) => {
+
+const Header = () => {
+  const dispatch = useDispatch();
   const logout = useLogout();
   const signOut = async () => {
     try {
+      dispatch(resetInput());
       logout();
     } catch (error) {
       console.log(error);

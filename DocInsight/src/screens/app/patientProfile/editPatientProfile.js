@@ -212,6 +212,9 @@ const EditPatientProfileScreen = (props) => {
                     textStyle={styles.inputText}
                     open={showDropDown}
                     value={disease}
+                    showTickIcon={false}
+                    selectedItemContainerStyle={{backgroundColor: color.Button}}
+                    selectedItemLabelStyle={{color: color.White, fontSize: scale(14), marginLeft: scale(5),}}
                     items={diseaseList}
                     setOpen={setShowDropDown}
                     setValue={setDisease}

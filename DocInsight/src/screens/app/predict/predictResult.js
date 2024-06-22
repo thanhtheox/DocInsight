@@ -1,15 +1,20 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, PermissionsAndroid, Platform } from 'react-native'
 import React, { useState } from 'react'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker'
+import { useDispatch } from 'react-redux'
+import RNFetchBlob from 'rn-fetch-blob';
 
 import color from '../../../constants/color'
 import scale from '../../../constants/responsive'
 import FONT_FAMILY from '../../../constants/fonts'
 import UploadImage from '../../../components/uploadImage'
+import { saveInput } from '../../../redux/actions/resultActions'
+import SubmitButton from '../../../components/submitButton'
+
 
 const PredictResultScreen = (props) => {
     const {patient, result} = props.route.params;
-    console.log({result});
+    const dispatch = useDispatch();
     const totalPredictPoint = result.coronaPercent + result.normalPercent + result.pneumoniaPercent + result.tuberculosisPercent; 
     const predictResult = [
         {
@@ -34,23 +39,72 @@ const PredictResultScreen = (props) => {
         },
     ];
     predictResult.sort((a, b) => b.percent - a.percent);
-    const [photo, setPhoto] = useState(null);
     const takePhoto = async () => {
         const result = await launchCamera({
           savePhotos: true,
           mediaType: 'photo',
         });
         if (!result.canceled) {
-          setPhoto(result.assets[0].uri);
+          dispatch(saveInput(result.assets[0].uri));
+          props.navigation.navigate('PredictInputScreen');
         }
       };
-      const pickPhoto = async () => {
-        const result = await launchImageLibrary({
-          savePhotos: true,
-          mediaType: 'photo',
-        });
-        if (!result.canceled) {
-          setPhoto(result.assets[0].uri);
+    const pickPhoto = async () => {
+    const result = await launchImageLibrary({
+        savePhotos: true,
+        mediaType: 'photo',
+    });
+    if (!result.canceled) {
+        dispatch(saveInput(result.assets[0].uri));
+        props.navigation.navigate('PredictInputScreen');
+    }
+    };
+    const downloadImage = () => {
+        try {
+          let date = new Date();
+          var Base64Code = result.resultImage.split("data:image/png;base64,"); //base64Image is my image base64 string
+          const dirs = RNFetchBlob.fs.dirs;
+          var path = dirs.DCIMDir + `/image_${Math.floor(date.getTime() + date.getSeconds() / 2)}.png`;
+    
+          RNFetchBlob.fs.writeFile(path, Base64Code[1], 'base64')
+          .then((res) => {
+            console.log("File : ", res);
+            // setTitle("Successfully");
+            // setVisible(true);
+            // setMessage('Save successfully!');
+          });
+        } catch (error) {
+          console.error('An error occurred during image download:', error);
+        //   setTitle("Error");
+        //   setVisible(true);
+        //   setMessage('Failed to download the image.');
+        }
+      };
+    const checkPermission = async () => {
+        if (Platform.OS === 'ios') {
+          downloadImage();
+        } else {
+          try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+              {
+                title: 'Storage Permission Required',
+                message:
+                  'App needs access to your storage to download Photos',
+              }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              // Once user grant the permission start downloading
+              console.log('Storage Permission Granted.');
+              downloadImage();
+            } else {
+              // If permission denied then show alert
+              alert('Storage Permission Not Granted');
+            }
+          } catch (err) {
+            // To handle permission related exception
+            console.warn(err);
+          }
         }
       };
   return (
@@ -84,6 +138,14 @@ const PredictResultScreen = (props) => {
             </View>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={{uri: result.resultImage}} resizeMode='cover'/>
+            </View>
+            <View style={{marginTop:scale(10), alignSelf:'center'}}>
+                <SubmitButton
+                    text={'Lưu hình ảnh'}
+                    backgroundColor={color.Button}
+                    color={color.White}
+                    onPress={checkPermission}
+                />
             </View>
             {/* patient profile */}
             <Text style={styles.titlePart}>Thông tin bệnh nhân</Text>

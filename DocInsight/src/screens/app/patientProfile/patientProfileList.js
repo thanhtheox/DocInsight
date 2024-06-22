@@ -34,14 +34,11 @@ const PatientProfileListScreen = (props) => {
       }, [props.navigation]);
     const getPatients = async () => {
         try {
-            setLoading(true);
             const response = await axiosPrivate.get(`/patients/${auth.userId}`);
             setPatients(response.data);
             setSearchResults(response.data);
-            setLoading(false);
           } catch (err) {
             console.log(err.response.data);
-            setLoading(false);
           }
     }; 
     useEffect(() => {
