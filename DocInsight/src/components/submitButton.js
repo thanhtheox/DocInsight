@@ -5,8 +5,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
   } from 'react-native';
-  import React from 'react';
-  import scale from '../constants/responsive';
+import React from 'react';
+import scale from '../constants/responsive';
 import FONT_FAMILY from '../constants/fonts';
 import color from '../constants/color';
   

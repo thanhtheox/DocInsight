@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+
 import scale from '../constants/responsive';
 import FONT_FAMILY from '../constants/fonts';
-import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import { IMG_Onboard1, IMG_Onboard2, IMG_Onboard3 } from '../assets/images';
 import color from '../constants/color';
-import { IC_Skip } from '../assets/icons';
 
 const {width: screenWidth, height: screenHeight } = Dimensions.get('window');  
 
@@ -36,7 +36,7 @@ const OnboardingScreen = (props) => {
                 />      
             </View>
             <TouchableOpacity style={styles.skip} onPress={() => props.navigation.navigate('SignInScreen')}>
-                <Text style={styles.skipText}>Skip</Text>
+                <Text style={styles.skipText}>Bỏ qua</Text>
                 {/* <IC_Skip/> */}
             </TouchableOpacity>
         </ScrollView>

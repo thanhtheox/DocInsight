@@ -12,76 +12,55 @@ import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import SwitchSelector from './switchSelector';
 import color from '../../constants/color';
 import scale from '../../constants/responsive';
 import { IMG_Logo } from '../../assets/images';
-import { IC_Hide, IC_Show } from '../../assets/icons';
 import FONT_FAMILY from '../../constants/fonts';
 import SubmitButton from '../../components/submitButton';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import useAuth from '../../hooks/useAuth';
 import Message from '../../components/message';
 
 
-const SignInScreen = (props) => {
+const ForgetPasswordScreen = (props) => {
   const axiosPrivate = useAxiosPrivate();
-  const {setAuth} = useAuth();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [title, setTitle] = useState('');
   const [visible, setVisible] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
-  const logInPayLoadSchema = yup.object({
+  const forgetPasswordPayLoadSchema = yup.object({
     email: yup
       .string()
       .required('Email cannot be blank')
       .email('Invalid email')
       .max(50, 'Email length must be less than 50 characters'),
-    password: yup
-      .string()
-      .required('Password can not be blank')
-      .min(6, 'Password length must be more than 6 characters')
-      .max(16, 'Password length must be less than 16 characters')
-      .matches(
-        passwordRegex,
-        'Password must contain uppercase, lowercase and number characters'
-      ),
   });
 
   const {
-    control: controlLogIn,
-    handleSubmit: handleLogin,
-    formState: { errors: errorsLogin },
+    control: controlForgetPassword,
+    handleSubmit: handleForgetPassword,
+    formState: { errors: errorsForget },
   } = useForm({
     mode: 'onChange',
     defaultValues: {
       email: '',
-      password: '',
     },
-    resolver: yupResolver(logInPayLoadSchema),
+    resolver: yupResolver(forgetPasswordPayLoadSchema),
   });
 
-  const loginFunction = async () => {
+  const forgetPasswordFunction = async () => {
     try {
       setLoading(true);
       const response = await axiosPrivate.post(
-        '/login',
-        JSON.stringify({email: email, password: password}),
+        '/forget-password',
+        JSON.stringify({email: email}),
       );
       console.log('success', JSON.stringify(response.data));
-      const accessToken = response?.data?.accessToken;
-      const userId = response?.data?.user._id;
-
-      setAuth({
-        email: email,
-        accessToken: accessToken,
-        userId: userId,
-      });
+      const id = response.data.owner;
+      props.navigation.navigate('ResetPasswordScreen',{
+        id: id
+      })
       setLoading(false);
     } catch (err) {
       console.log('err', err);
@@ -102,15 +81,14 @@ const SignInScreen = (props) => {
       />
       <View style={styles.header}>
         <Image source={IMG_Logo} style={styles.image} resizeMode="contain" />
-        <Text style={styles.welcome}>Xin chào, chào mừng bạn quay lại!</Text>
+        <Text style={styles.welcome}>Xin chào, vui lòng nhập email để tiếp tục!</Text>
       </View>
       <View style={styles.body}>
-        <SwitchSelector navigate={() => props.navigation.navigate('SignUpScreen')} screen={'SignIn'}/>
         <View style={styles.form}>
           {/* emailInput */}
           <Controller
             name="email"
-            control={controlLogIn}
+            control={controlForgetPassword}
             render={({ field: { onChange, value } }) => (
               <View style={styles.inputBox}>
                 <View style={styles.viewInput}>
@@ -126,53 +104,19 @@ const SignInScreen = (props) => {
                     keyboardType="email-address"
                   />
                 </View>
-                {errorsLogin?.email && (
-                  <Text style={styles.textFailed}>{errorsLogin.email.message}</Text>
+                {errorsForget?.email && (
+                  <Text style={styles.textFailed}>{errorsForget.email.message}</Text>
                 )}
               </View>
             )}
           />
-          {/* passwordInput */}
-          <Controller
-            name="password"
-            control={controlLogIn}
-            render={({ field: { onChange, value } }) => (
-              <View style={styles.inputBox}>
-                <View style={styles.viewInput}>
-                  <TextInput
-                    secureTextEntry={!passwordVisible}
-                    onChangeText={(password) => [
-                      onChange(password),
-                      setPassword(password),
-                    ]}
-                    value={value}
-                    placeholder="*Mật khẩu"
-                    placeholderTextColor={color.Description}
-                    style={styles.inputText}
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeIcon}
-                    onPress={() => setPasswordVisible(!passwordVisible)}
-                  >
-                    {passwordVisible ? <IC_Show /> : <IC_Hide />}
-                  </TouchableOpacity>
-                </View>
-                {errorsLogin?.password && (
-                  <Text style={styles.textFailed}>{errorsLogin.password.message}</Text>
-                )}
-              </View>
-            )}
-          />
-          <TouchableOpacity style={styles.viewForgotText} onPress={() => props.navigation.navigate('ForgetPasswordScreen')}>
-            <Text style={styles.textForgot}>Quên mật khẩu?</Text>
-          </TouchableOpacity>
 
           <View style={styles.buttonSignIn}>
             <SubmitButton
-              text={'Đăng nhập'}
+              text={'Tiếp tục'}
               backgroundColor={color.Button}
               color={color.White}
-              onPress={handleLogin(loginFunction)}
+              onPress={handleForgetPassword(forgetPasswordFunction)}
               loading={loading}
             />
           </View>
@@ -273,4 +217,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default ForgetPasswordScreen;

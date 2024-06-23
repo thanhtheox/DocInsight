@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import axios from 'axios';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { useDispatch } from 'react-redux';
 
 import { IMG_Onboard1, IMG_Onboard2, IMG_Onboard3 } from '../../assets/images';
 import color from '../../constants/color';
@@ -11,25 +12,30 @@ import FONT_FAMILY from '../../constants/fonts';
 import UploadImage from '../../components/uploadImage';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import useAuth from '../../hooks/useAuth';
+import { saveInput } from '../../redux/actions/resultActions';
+
 
 
 
 const {width: screenWidth, height: screenHeight } = Dimensions.get('window'); 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
     
     const banners = [
         {source: IMG_Onboard1, text: "Dự đoán bệnh lý liên quan đến phổi", id:0 },
         {source: IMG_Onboard2, text: "Khoanh vùng những điểm bất thường", id:1 },
         {source: IMG_Onboard3, text: "Hỗ trợ lưu lịch sử dự đoán", id:2 },
     ];
-    const [photo, setPhoto] = useState(null);
+    const dispatch = useDispatch();
     const takePhoto = async () => {
         const result = await launchCamera({
           savePhotos: true,
           mediaType: 'photo',
         });
         if (!result.canceled) {
-          setPhoto(result.assets[0].uri);
+          dispatch(saveInput(result.assets[0].uri));
+          props.navigation.navigate('Predict', {
+            screen: 'PredictInputScreen'
+          });
         }
       };
       const pickPhoto = async () => {
@@ -38,7 +44,10 @@ const HomeScreen = () => {
           mediaType: 'photo',
         });
         if (!result.canceled) {
-          setPhoto(result.assets[0].uri);
+          dispatch(saveInput(result.assets[0].uri));
+          props.navigation.navigate('Predict', {
+            screen: 'PredictInputScreen',
+          });
         }
       };
 
@@ -62,7 +71,8 @@ const HomeScreen = () => {
                 const response = await axios.get(
                     'https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=352de5f4d69d436f9b25738cfae73096',
                 );
-                setNews(response.data.articles);
+                var data = response.data.articles.filter((item) => item.title != "[Removed]");
+                setNews(data);
             } catch (err) {
                 console.log('err', err);
             }
@@ -78,9 +88,12 @@ const HomeScreen = () => {
                         case 'Tuberculosis': item.resultLabel = 'Bệnh Lao'; break;
                     }
                 })
-                setPredictResults(response.data);
+                if(response.data.length > 5)
+                    setPredictResults(response.data.slice(0,5));
+                else
+                    setPredictResults(response.data);
               } catch (err) {
-                console.log(err.response.data);
+                console.log(err);
               }
         }; 
         getPredictResults();
@@ -117,7 +130,8 @@ const HomeScreen = () => {
                 <UploadImage onPressTake={takePhoto} onPressPick={pickPhoto}/>
             </View>
             {/* Predict Results */}
-            <Text style={styles.titlePart}>Gần đây</Text>
+            {predictResults.length != 0 && <>
+                <Text style={styles.titlePart}>Gần đây</Text>
             <View style={{
                 justifyContent: 'center', alignItems: 'center'
             }}>
@@ -136,7 +150,15 @@ const HomeScreen = () => {
                     data={predictResults}
 
                     renderItem={({ item }) => (
-                        <TouchableOpacity key={item._id} style={{width: screenWidth,flexDirection:'row', justifyContent: 'center', alignSelf:'center'}}>
+                        <TouchableOpacity key={item._id} 
+                        onPress={() => props.navigation.navigate('Predict', {
+                            screen: 'PredictResultScreen',
+                            params: {
+                                patient: item.patientId,
+                                result: item
+                            },
+                          })}
+                        style={{width: screenWidth,flexDirection:'row', justifyContent: 'center', alignSelf:'center'}}>
                             <View style={{backgroundColor:'#F1F1F1', borderRadius: scale(15),height:'100%', width:'85%',flexDirection:'row-reverse',justifyContent:'space-between'}}>
                                 <Image source={{uri: item.inputImage}} style={{
                                     justifyContent:'flex-end',
@@ -170,6 +192,7 @@ const HomeScreen = () => {
                     )}
                 />      
             </View>
+            </>}
             {/* Medical News */}
             <Text style={styles.titlePart}>Tin tức y khoa</Text>
             <View style={{maxHeight: scale(200), width: '95%', flexDirection: 'column', alignSelf:'center', marginTop: scale(10)}}>
@@ -188,7 +211,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
             ))}
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginBottom:scale(10)}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginBottom:scale(100)}}>
                 <TouchableOpacity
                     onPress={() => setPageNews(pageNews > 1 ? pageNews - 1 : pageNews)}
                     disabled={pageNews === 1}

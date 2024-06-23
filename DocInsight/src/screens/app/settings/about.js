@@ -1,8 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from 'react-native';
-import FONT_FAMILY from '../../../constants/fonts';
-//import { IC_Back } from '../../assets/icons';
 import { IMG_Logo2 } from '../../../assets/images';
 import Header from '../../../components/header';
+import React from 'react';
+import FONT_FAMILY from '../../../constants/fonts';
+import scale from '../../../constants/responsive';
 import color from '../../../constants/color';
 
 const { width, height } = Dimensions.get('window');
@@ -46,7 +47,7 @@ const AboutScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FB',
+    backgroundColor: '#FFFFFF',
   },
   title: {
     fontFamily: FONT_FAMILY.SemiBold,
@@ -56,10 +57,17 @@ const styles = StyleSheet.create({
   logo: {
     borderRadius: 360,
     alignSelf: 'center',
+    backgroundColor: color.White,
+  },
+  title: {
+    fontFamily: FONT_FAMILY.SemiBold,
+    fontSize: scale(26),
+    color: color.TitleActive,
   },
   versionText: {
     marginVertical: height*0.03,
     textAlign: 'center',
+
     fontFamily: FONT_FAMILY.Medium,
     fontSize: 20,
     color: color.TitleActive,
@@ -73,8 +81,14 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     fontSize: 16,
     fontFamily: FONT_FAMILY.Medium,
+  },
+  bodyText: {
+    textAlign: 'justify',
+    fontSize: scale(18),
+    fontFamily: FONT_FAMILY.Regular,
     color: color.TitleActive,
   },
 });
 
 export default AboutScreen;
+

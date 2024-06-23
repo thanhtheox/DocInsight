@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -8,122 +7,87 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RadioButton } from 'react-native-paper';
 
-import SwitchSelector from './switchSelector';
 import color from '../../constants/color';
 import scale from '../../constants/responsive';
 import { IMG_Logo } from '../../assets/images';
-import { IC_Hide, IC_Show } from '../../assets/icons';
 import FONT_FAMILY from '../../constants/fonts';
 import SubmitButton from '../../components/submitButton';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import useAuth from '../../hooks/useAuth';
+import { IC_Hide, IC_Show } from '../../assets/icons';
 import Message from '../../components/message';
 
 
-const SignUpScreen = (props) => {
-  const {setAuth} = useAuth();
+const ResetPasswordScreen = (props) => {
+  const {id} = props.route.params;
   const axiosPrivate = useAxiosPrivate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [visible, setVisible] = useState(false);
-  const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [gender, setGender] = useState('male');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [title, setTitle] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false);
-
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
-  const signInPayLoadSchema = yup.object({
-    email: yup
-      .string()
-      .required('Email cannot be blank')
-      .email('Invalid email')
-      .max(50, 'Email length must be less than 50 characters'),
+  const resetPasswordPayLoadSchema = yup.object({
+    otp: yup.number().required("OTP cannot be blank"),
     password: yup
-      .string()
-      .required('Password can not be blank')
-      .min(6, 'Password length must be more than 6 characters')
-      .max(16, 'Password length must be less than 16 characters')
-      .matches(
-        passwordRegex,
-        'Password must contain uppercase, lowercase and number characters'
-      ),
-    name: yup
-      .string()
-      .max(30, 'Invalid name')
-      .required('Name cannot be blank'),
+        .string()
+        .required("Password can not be blank")
+        .min(6, "Password length must be more than 6 characters")
+        .max(16, "Password length must be less than 16 characters")
+        .matches(
+            passwordRegex,
+            "Password must contain uppercase, lowercase and number characters"
+        ),
     passwordConfirm: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match'),
+        .string()
+        .oneOf([yup.ref("password")], "Passwords must match"),
   });
 
   const {
-    control: controlSignUp,
-    handleSubmit: handleSignUp,
-    formState: { errors: errorsSignUp },
+    control: controlResetPassword,
+    handleSubmit: handleResetPassword,
+    formState: { errors: errorsReset },
   } = useForm({
     mode: 'onChange',
     defaultValues: {
-      email: '',
+      otp: '',
       password: '',
-      name: '',
       passwordConfirm: '',
     },
-    resolver: yupResolver(signInPayLoadSchema),
+    resolver: yupResolver(resetPasswordPayLoadSchema),
   });
 
-  const signUpFunction = async () => {
+  const resetPasswordFunction = async () => {
     try {
       setLoading(true);
       const response = await axiosPrivate.post(
-        '/sign-up',
-        JSON.stringify({
-          email: email,
-          name: name,
-          password: password,
-          gender: gender
-        }),
+        `/reset-password/${id}`,
+        JSON.stringify({password: password, otp: otp}),
       );
       console.log('success', JSON.stringify(response.data));
-
-      const responseLogin = await axiosPrivate.post(
-        '/login',
-        JSON.stringify({email: email, password: password}),
-      );
-      const accessToken = responseLogin?.data?.accessToken;
-      console.log('successLogin', JSON.stringify(response.data));
-      setAuth({
-        email: email,
-        accessToken,
-        userId: responseLogin.data.user._id,
-      });
+      props.navigation.navigate('SignInScreen');
       setLoading(false);
     } catch (err) {
+      console.log('err', err);
       setLoading(false);
       setVisible(true);
       setErrorMessage("What's wrong here?");
       setTitle('Error');
-      console.log(err);
     }
   };
 
-  const handleGenderChange = (value) => {
-    setGender(value);
-  };
-
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Message
           visible={visible}
           clickCancel={() => { setVisible(false) }}
@@ -132,57 +96,31 @@ const SignUpScreen = (props) => {
       />
       <View style={styles.header}>
         <Image source={IMG_Logo} style={styles.image} resizeMode="contain" />
-        <Text style={styles.welcome}>Xin chào, bạn chưa có tài khoản</Text>
+        <Text style={styles.welcome}>Xin chào, vui lòng nhập OTP và mật khẩu mới để hoàn thành đổi mật khẩu!</Text>
       </View>
       <View style={styles.body}>
-        <SwitchSelector navigate={() => props.navigation.navigate('SignInScreen')} screen={'SignUp'}/>
         <View style={styles.form}>
-          {/* emailInput */}
+          {/* otpInput */}
           <Controller
-            name="email"
-            control={controlSignUp}
+            name="otp"
+            control={controlResetPassword}
             render={({ field: { onChange, value } }) => (
               <View style={styles.inputBox}>
                 <View style={styles.viewInput}>
                   <TextInput
-                    onChangeText={(email) => [
-                      onChange(email),
-                      setEmail(email),
+                    onChangeText={(otp) => [
+                      onChange(otp),
+                      setOtp(otp),
                     ]}
-                    placeholder="*Email"
+                    placeholder="*OTP"
                     value={value}
                     placeholderTextColor={color.Description}
                     style={styles.inputText}
-                    keyboardType="email-address"
+                    keyboardType="numeric"
                   />
                 </View>
-                {errorsSignUp?.email && (
-                  <Text style={styles.textFailed}>{errorsSignUp.email.message}</Text>
-                )}
-              </View>
-            )}
-          />
-          {/* name */}
-          <Controller
-            name="name"
-            control={controlSignUp}
-            render={({ field: { onChange, value } }) => (
-              <View style={styles.inputBox}>
-                <View style={styles.viewInput}>
-                  <TextInput
-                    onChangeText={(name) => [
-                      onChange(name),
-                      setName(name),
-                    ]}
-                    placeholder="*Họ và tên"
-                    value={value}
-                    placeholderTextColor={color.Description}
-                    style={styles.inputText}
-                    keyboardType="default"
-                  />
-                </View>
-                {errorsSignUp?.name && (
-                  <Text style={styles.textFailed}>{errorsSignUp.name.message}</Text>
+                {errorsReset?.otp && (
+                  <Text style={styles.textFailed}>{errorsReset.otp.message}</Text>
                 )}
               </View>
             )}
@@ -190,7 +128,7 @@ const SignUpScreen = (props) => {
           {/* passwordInput */}
           <Controller
             name="password"
-            control={controlSignUp}
+            control={controlResetPassword}
             render={({ field: { onChange, value } }) => (
               <View style={styles.inputBox}>
                 <View style={styles.viewInput}>
@@ -212,8 +150,8 @@ const SignUpScreen = (props) => {
                     {passwordVisible ? <IC_Show /> : <IC_Hide />}
                   </TouchableOpacity>
                 </View>
-                {errorsSignUp?.password && (
-                  <Text style={styles.textFailed}>{errorsSignUp.password.message}</Text>
+                {errorsReset?.password && (
+                  <Text style={styles.textFailed}>{errorsReset.password.message}</Text>
                 )}
               </View>
             )}
@@ -221,7 +159,7 @@ const SignUpScreen = (props) => {
           {/* passwordConfirmInput */}
           <Controller
             name="passwordConfirm"
-            control={controlSignUp}
+            control={controlResetPassword}
             render={({ field: { onChange, value } }) => (
               <View style={styles.inputBox}>
                 <View style={styles.viewInput}>
@@ -243,48 +181,28 @@ const SignUpScreen = (props) => {
                     {passwordConfirmVisible ? <IC_Show /> : <IC_Hide />}
                   </TouchableOpacity>
                 </View>
-                {errorsSignUp?.passwordConfirm && (
-                  <Text style={styles.textFailed}>{errorsSignUp.passwordConfirm.message}</Text>
+                {errorsReset?.passwordConfirm && (
+                  <Text style={styles.textFailed}>{errorsReset.passwordConfirm.message}</Text>
                 )}
               </View>
             )}
           />
-
-          {/* gender */}
-          <View style={styles.genderContainer}>
-            <RadioButton.Group
-              onValueChange={handleGenderChange}
-              value={gender}
-            >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                <View style={styles.radioOption}>
-                  <RadioButton value="male" color={color.Button} />
-                  <Text style={{ color: color.TitleActive }}>Nam</Text>
-                </View>
-                <View style={styles.radioOption}>
-                  <RadioButton value="female" color={color.Button} />
-                  <Text style={{ color: color.TitleActive }}>Nữ</Text>
-                </View>
-              </View>
-            </RadioButton.Group>
-          </View>
-
-          <View style={styles.buttonSignUp}>
+          <View style={styles.buttonSignIn}>
             <SubmitButton
-              text={'Đăng kí'}
+              text={'Tiếp tục'}
               backgroundColor={color.Button}
               color={color.White}
+              onPress={handleResetPassword(resetPasswordFunction)}
               loading={loading}
-              onPress={handleSignUp(signUpFunction)}
             />
           </View>
 
-          <View style={styles.viewErrorText}>
+          {/* <View style={styles.viewErrorText}>
             <Text style={styles.textError}>{errorMessage}</Text>
-          </View>
+          </View> */}
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -339,14 +257,22 @@ const styles = StyleSheet.create({
     marginLeft: scale(5),
     fontFamily: FONT_FAMILY.Medium,
   },
-  buttonSignUp: {
-    marginTop: scale(40),
+  buttonSignIn: {
+    marginTop: scale(61),
     alignSelf: 'center',
+  },
+  viewForgotText: {
+    alignSelf: 'flex-end',
+  },
+  textForgot: {
+    fontFamily: FONT_FAMILY.Medium,
+    color: color.Blue,
+    fontSize: 12,
   },
   viewErrorText: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: scale(10),
+    marginTop: scale(21),
   },
   textError: {
     color: color.Warning,
@@ -365,16 +291,6 @@ const styles = StyleSheet.create({
     right: scale(15),
     bottom: scale(15),
   },
-  genderContainer: {
-    width: scale(339),
-    marginTop: scale(10),
-    padding: scale(10),
-  },
-  radioOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: scale(10),
-  },
 });
 
-export default SignUpScreen;
+export default ResetPasswordScreen;

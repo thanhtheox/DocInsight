@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import {Controller, useForm} from 'react-hook-form';
 import {RadioButton} from 'react-native-paper';
@@ -11,6 +11,7 @@ import FONT_FAMILY from '../../../constants/fonts'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import useAuth from '../../../hooks/useAuth';
 import SubmitButton from '../../../components/submitButton';
+import Message from '../../../components/message';
 
 const createPatientSchema = yup.object({
     name: yup
@@ -18,20 +19,25 @@ const createPatientSchema = yup.object({
       .required('Họ và tên không được để trống')
       .max(50, 'Họ và tên không được dài quá 50 kí tự'),
   
-    birthday: yup
-      .string()
-      .matches(
-        /^(?:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]?)$/,
+      birthday: yup
+      .number()
+      .test(
+        'isValidYear',
         'Định dạng năm chưa đúng',
+        function(value) {
+          return /^(?:[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]?)$/.test(value);
+        }
       ),
     address: yup.string(),
     disease: yup.string().required('Vui lòng chọn bệnh liên quan'),
   });
 const AddPatientProfileScreen = (props) => {
     const [name, setName] = useState('');
-    const [birthday, setBirthday] = useState('');
+    const [birthday, setBirthday] = useState();
     const [address, setAddress] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
+    const [title, setTitle] = useState('Error');
+    const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [disease, setDisease] = useState('');
@@ -77,9 +83,9 @@ const AddPatientProfileScreen = (props) => {
           props.navigation.navigate('PatientProfileListScreen');
         } catch (err) {
           setLoading(false);
-          // setVisible(true);
-          setErrorMessage(err?.toString()||"Network Error");
-          // setTitle('Error');
+          setVisible(true);
+          setErrorMessage("What's wrong here?");
+          setTitle('Error');
           console.log(err);
         }
       };
@@ -88,6 +94,13 @@ const AddPatientProfileScreen = (props) => {
     };
   return (
     <SafeAreaView style={styles.container}>
+        <Message
+            visible={visible}
+            clickCancel={() => { setVisible(false) }}
+            title={title}
+            message={errorMessage}
+        />
+        <ScrollView>
         <Text style={styles.titlePart}>Thêm bệnh nhân</Text>
         <View style={styles.form}>
             {/* nameInput */}
@@ -132,6 +145,7 @@ const AddPatientProfileScreen = (props) => {
                     value={value}
                     placeholder="*Năm sinh"
                     placeholderTextColor={color.Description}
+                    keyboardType='numeric'
                     style={styles.inputText}
                     />
                 </View>
@@ -182,6 +196,9 @@ const AddPatientProfileScreen = (props) => {
                     open={showDropDown}
                     value={disease}
                     items={diseaseList}
+                    showTickIcon={false}
+                    selectedItemContainerStyle={{backgroundColor: color.Button}}
+                    selectedItemLabelStyle={{color: color.White, fontSize: scale(14), marginLeft: scale(5),}}
                     setOpen={setShowDropDown}
                     setValue={setDisease}
                     placeholder="Bệnh liên quan"
@@ -227,6 +244,7 @@ const AddPatientProfileScreen = (props) => {
                 onPress={handleCreate(createFunction)}
             />
         </View>
+        </ScrollView>
     </SafeAreaView>
   )
 }
@@ -247,41 +265,41 @@ const styles = StyleSheet.create({
     },
     form: {
         alignItems: 'center',
-        paddingTop: 10,
+        paddingTop: scale(10),
       },
     inputBox: {
-        paddingTop: 20,
-        width: 339,
-        height: 100,
+        paddingTop: scale(20),
+        width: scale(339),
+        height: scale(100),
         justifyContent: 'center',
     },
     viewInput: {
-        height: 55,
+        height: scale(55),
         borderWidth: 1,
         justifyContent: 'center',
         borderColor: color.TitleActive,
-        borderRadius: 12,
+        borderRadius: scale(12),
     },
     inputText: {
         color: color.TitleActive,
         fontSize: 14,
-        marginLeft: 5,
+        marginLeft: scale(5),
     },
     genderContainer: {
-        width: 339,
-        marginTop: 20,
-        padding: 10,
+        width: scale(339),
+        marginTop: scale(20),
+        padding: scale(10),
     },
     radioOption: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight: 10,
+        marginRight: scale(10),
     },
     textFailed: {
-        paddingLeft: 10,
-        marginTop: 7,
+        paddingLeft: scale(10),
+        marginTop: scale(7),
         justifyContent: 'center',
-        fontSize: 12,
+        fontSize: scale(12),
         color: 'red',
     },
     dropdown: {
@@ -289,6 +307,7 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         marginTop: scale(40),
+        marginBottom: scale(100),
         alignSelf: 'center',
         width:'90%',
         justifyContent:'space-around',

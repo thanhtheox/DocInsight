@@ -19,13 +19,12 @@ const RootStackScreen = props => {
       <RootStack.Navigator
       initialRouteName="AuthStackScreen"
       screenOptions={{headerShown: false}}>
-        {!auth?.accessToken ? (
+        {auth?.accessToken ? (
           <>
-            <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
             <RootStack.Screen name="AppStackScreen" component={AppStackScreen} />
           </>
         ):(
-        <RootStack.Screen name="AppStackScreen" component={AppStackScreen} />
+          <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
         )}
       </RootStack.Navigator>
   );

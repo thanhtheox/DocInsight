@@ -1,6 +1,7 @@
 import React from 'react';
-import color from './src/constants/color';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import color from './src/constants/color';
 import { AuthProvider } from './src/context/AuthProvider';
 import RootNavigator from './src/routes/RootNavigation';
 

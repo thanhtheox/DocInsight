@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import {Controller, useForm} from 'react-hook-form';
 import {RadioButton} from 'react-native-paper';
@@ -11,6 +11,7 @@ import FONT_FAMILY from '../../../constants/fonts'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import useAuth from '../../../hooks/useAuth';
 import SubmitButton from '../../../components/submitButton';
+import Message from '../../../components/message';
 
 const editPatientSchema = yup.object({
     name: yup
@@ -36,6 +37,8 @@ const EditPatientProfileScreen = (props) => {
     const [birthday, setBirthday] = useState(patient.birthday);
     const [address, setAddress] = useState(patient.address);
     const [showDropDown, setShowDropDown] = useState(false);
+    const [title, setTitle] = useState('Error');
+    const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loadingEdit, setLoadingEdit] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState(false);
@@ -89,9 +92,9 @@ const EditPatientProfileScreen = (props) => {
           });
         } catch (err) {
             setLoadingEdit(false);
-          // setVisible(true);
+          setVisible(true);
           setErrorMessage(err?.toString()||"Network Error");
-          // setTitle('Error');
+          setTitle('Error');
           console.log(err);
         }
       };
@@ -106,9 +109,9 @@ const EditPatientProfileScreen = (props) => {
           props.navigation.navigate('PatientProfileListScreen');
         } catch (err) {
             setLoadingDelete(false);
-          // setVisible(true);
-          setErrorMessage(err?.toString()||"Network Error");
-          // setTitle('Error');
+          setVisible(true);
+          setErrorMessage("What's wrong here?");
+          setTitle('Error');
           console.log(err);
         }
       };
@@ -117,6 +120,13 @@ const EditPatientProfileScreen = (props) => {
     };
   return (
     <SafeAreaView style={styles.container}>
+        <Message
+            visible={visible}
+            clickCancel={() => { setVisible(false) }}
+            title={title}
+            message={errorMessage}
+        />
+        <ScrollView>
         <Text style={styles.titlePart}>Chỉnh sửa bệnh nhân</Text>
         <View style={styles.form}>
             {/* nameInput */}
@@ -211,6 +221,9 @@ const EditPatientProfileScreen = (props) => {
                     textStyle={styles.inputText}
                     open={showDropDown}
                     value={disease}
+                    showTickIcon={false}
+                    selectedItemContainerStyle={{backgroundColor: color.Button}}
+                    selectedItemLabelStyle={{color: color.White, fontSize: scale(14), marginLeft: scale(5),}}
                     items={diseaseList}
                     setOpen={setShowDropDown}
                     setValue={setDisease}
@@ -257,7 +270,7 @@ const EditPatientProfileScreen = (props) => {
                 onPress={handleEdit(editFunction)}
             />
         </View>
-        <View style={{marginTop:scale(10), alignSelf:'center'}}>
+        <View style={{marginTop:scale(10), alignSelf:'center', marginBottom: scale(100)}}>
             <SubmitButton
                 text={'Xóa bệnh nhân'}
                 backgroundColor={color.Warning}
@@ -266,6 +279,7 @@ const EditPatientProfileScreen = (props) => {
                 onPress={deleteFunction}
             />
         </View>
+        </ScrollView>
     </SafeAreaView>
   )
 }

@@ -34,14 +34,11 @@ const PatientProfileListScreen = (props) => {
       }, [props.navigation]);
     const getPatients = async () => {
         try {
-            setLoading(true);
             const response = await axiosPrivate.get(`/patients/${auth.userId}`);
             setPatients(response.data);
             setSearchResults(response.data);
-            setLoading(false);
           } catch (err) {
             console.log(err.response.data);
-            setLoading(false);
           }
     }; 
     useEffect(() => {
@@ -104,6 +101,15 @@ const PatientProfileListScreen = (props) => {
                 <IC_Add color={color.White}/>
             </TouchableOpacity>
         </View>
+        {patients.length === 0 && 
+        <View style={{alignSelf: 'center', marginTop: scale(200), width: '95%', alignItems:'center'}}>
+            <Text style={{
+                fontSize: scale(28),
+                color: color.TitleActive,
+                fontFamily: FONT_FAMILY.SemiBold,
+            }}>{`Chưa có bệnh nhân nào!`}
+            </Text>
+        </View> }
         <View style={{maxHeight: scale(800), width: '95%', flexDirection: 'column', alignSelf:'center'}}>
         {displayedPatients.map((item) => (
             <TouchableOpacity key={item._id} 
@@ -134,7 +140,7 @@ const PatientProfileListScreen = (props) => {
             </TouchableOpacity>
         ))}
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginVertical:scale(10)}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center',marginTop:scale(10), marginBottom:scale(100)}}>
             <TouchableOpacity
                 onPress={() => setPage(page > 1 ? page - 1 : page)}
                 disabled={page === 1}
@@ -144,7 +150,7 @@ const PatientProfileListScreen = (props) => {
                     {'<'}
                 </Text>
             </TouchableOpacity>
-            <Text style={{ color: color.Button, fontSize: scale(25), fontFamily: FONT_FAMILY.SemiBold }}>{page}</Text>
+            {searchResults.length > 6 && <Text style={{ color: color.Button, fontSize: scale(25), fontFamily: FONT_FAMILY.SemiBold }}>{page}</Text>}
             <TouchableOpacity
                 onPress={() => setPage(page < lastPage ? page + 1 : page)}
                 disabled={page === lastPage}
