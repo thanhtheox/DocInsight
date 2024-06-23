@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     // backgroundColor: color.GraySolid,
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: color.White
   },
   viewIcon: {
     paddingLeft: scale(-5),

@@ -8,7 +8,8 @@ import PatientProfileDetailsScreen from '../screens/app/patientProfile/patientPr
 import AddPatientProfileScreen from '../screens/app/patientProfile/addPatientProfile';
 import EditPatientProfileScreen from '../screens/app/patientProfile/editPatientProfile';
 import Header from '../components/header';
-
+import AboutScreen from '../screens/app/settings/about';
+import SettingScreen from '../screens/app/settings/settings';
 
 const AppStack = createNativeStackNavigator();
 
