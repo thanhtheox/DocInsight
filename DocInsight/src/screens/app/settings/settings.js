@@ -1,27 +1,47 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, ScrollView, Dimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
 import React, { useState } from 'react';
-import FONT_FAMILY from '../../constants/fonts';
-import color from '../../constants/color';
-import scale from '../../constants/responsive';
+import Clipboard from '@react-native-clipboard/clipboard';
+import FONT_FAMILY from '../../../constants/fonts';
+import color from '../../../constants/color';
+import scale from '../../../constants/responsive';
+import Message from '../../../components/message';
 
 const { width, height } = Dimensions.get('window');
 const SettingsScreen = (props) => {
     const [title, setTitle] = useState('Error');
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
+    const shareFunction = () => {
+      setTitle("Copied link to share")
+      setVisible(true);
+      Clipboard.setString('https://play.google.com/store/apps/details?id=com.filterpicturern&pcampaignid=web_share');
+      setMessage('https://play.google.com/store/apps/details?id=com.filterpicturern&pcampaignid=web_share');   
+    }
+    const helpFunction = () => {
+        setTitle("Send mail to")
+        setVisible(true);
+        setMessage('utrgk21.29@gmail.com');   
+    }
   return (
     <SafeAreaView style={styles.container}>
+        <Message
+            visible={visible}
+            clickCancel={() => { setVisible(false) }}
+            title={title}
+            message={message}
+        />
         <Text style={styles.titlePart}>Cài đặt</Text>
         <View style={styles.frame}>
-            <TouchableOpacity style={styles.button} >
+            <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate('AboutScreen')}
+              >
                 <Text style={styles.buttonText}>Giới thiệu DocInsights</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={shareFunction}>
                 <Text style={styles.buttonText}>Chia sẻ DocInsights</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.helpButton}>
+            <TouchableOpacity style={styles.helpButton} onPress={helpFunction}>
                 <Text style={styles.buttonText}>Trợ giúp</Text>
             </TouchableOpacity>
         </View>

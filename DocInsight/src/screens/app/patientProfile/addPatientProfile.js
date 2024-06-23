@@ -11,6 +11,7 @@ import FONT_FAMILY from '../../../constants/fonts'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import useAuth from '../../../hooks/useAuth';
 import SubmitButton from '../../../components/submitButton';
+import Message from '../../../components/message';
 
 const createPatientSchema = yup.object({
     name: yup
@@ -35,6 +36,8 @@ const AddPatientProfileScreen = (props) => {
     const [birthday, setBirthday] = useState();
     const [address, setAddress] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
+    const [title, setTitle] = useState('Error');
+    const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [disease, setDisease] = useState('');
@@ -80,9 +83,9 @@ const AddPatientProfileScreen = (props) => {
           props.navigation.navigate('PatientProfileListScreen');
         } catch (err) {
           setLoading(false);
-          // setVisible(true);
-          setErrorMessage(err?.toString()||"Network Error");
-          // setTitle('Error');
+          setVisible(true);
+          setErrorMessage("What's wrong here?");
+          setTitle('Error');
           console.log(err);
         }
       };
@@ -91,6 +94,12 @@ const AddPatientProfileScreen = (props) => {
     };
   return (
     <SafeAreaView style={styles.container}>
+        <Message
+            visible={visible}
+            clickCancel={() => { setVisible(false) }}
+            title={title}
+            message={errorMessage}
+        />
         <ScrollView>
         <Text style={styles.titlePart}>Thêm bệnh nhân</Text>
         <View style={styles.form}>

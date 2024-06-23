@@ -13,7 +13,8 @@ import EditPatientProfileScreen from '../screens/app/patientProfile/editPatientP
 import PredictResultScreen from '../screens/app/predict/predictResult';
 import PredictInputScreen from '../screens/app/predict/predictInput';
 
-import SettingsScreen from '../screens/app/settings';
+import SettingsScreen from '../screens/app/settings/settings';
+import AboutScreen from '../screens/app/settings/about';
 
 import Header from '../components/header';
 import color from '../constants/color';
@@ -55,6 +56,23 @@ const PredictStackScreen = () => {
         <PredictStack.Screen name="PredictInputScreen" component={PredictInputScreen} />
         <PredictStack.Screen name="PredictResultScreen" component={PredictResultScreen} />
     </PredictStack.Navigator>
+  );
+};
+
+const SettingsStack = createNativeStackNavigator();
+
+const SettingsStackScreen = () => {
+
+  return (
+    <SettingsStack.Navigator
+      initialRouteName="SettingsScreen"
+      screenOptions={{
+        headerShown: false,
+        headerBackVisible: false,
+      }}>
+        <SettingsStack.Screen name="SettingsScreen" component={SettingsScreen} />
+        <SettingsStack.Screen name="AboutScreen" component={AboutScreen} />
+    </SettingsStack.Navigator>
   );
 };
 
@@ -136,7 +154,7 @@ const AppStackScreen = () => {
         },
         headerTitle: () => <Header navigation={navigation} />,
     })}/>
-    <AppStack.Screen name="Settings" component={SettingsScreen} 
+    <AppStack.Screen name="Settings" component={SettingsStackScreen} 
       options={({navigation}) => ({
         tabBarLabel: ({ color }) => {
           return (

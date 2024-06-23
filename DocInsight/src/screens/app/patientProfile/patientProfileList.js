@@ -101,6 +101,15 @@ const PatientProfileListScreen = (props) => {
                 <IC_Add color={color.White}/>
             </TouchableOpacity>
         </View>
+        {patients.length === 0 && 
+        <View style={{alignSelf: 'center', marginTop: scale(200), width: '95%', alignItems:'center'}}>
+            <Text style={{
+                fontSize: scale(28),
+                color: color.TitleActive,
+                fontFamily: FONT_FAMILY.SemiBold,
+            }}>{`Chưa có bệnh nhân nào!`}
+            </Text>
+        </View> }
         <View style={{maxHeight: scale(800), width: '95%', flexDirection: 'column', alignSelf:'center'}}>
         {displayedPatients.map((item) => (
             <TouchableOpacity key={item._id} 

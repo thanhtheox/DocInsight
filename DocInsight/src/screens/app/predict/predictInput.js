@@ -16,6 +16,8 @@ import { saveInput } from '../../../redux/actions/resultActions'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import useAuth from '../../../hooks/useAuth'
 import SubmitButton from '../../../components/submitButton'
+import Loader from '../../../components/loader'
+import Message from '../../../components/message'
 
 const createPatientSchema = yup.object({
     name: yup
@@ -48,8 +50,11 @@ const PredictInputScreen = (props) => {
     const [birthday, setBirthday] = useState();
     const [address, setAddress] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
+    const [title, setTitle] = useState('Error');
+    const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loadingPredict, setLoadingPredict] = useState(false);
     const [disease, setDisease] = useState('');
     const [gender, setGender] = useState('male');
     const {auth} = useAuth();
@@ -126,9 +131,9 @@ const PredictInputScreen = (props) => {
           setLoading(false);
         } catch (err) {
           setLoading(false);
-          // setVisible(true);
-          setErrorMessage(err?.toString()||"Network Error");
-          // setTitle('Error');
+          setVisible(true);
+          setErrorMessage("What's wrong here?");
+          setTitle('Error');
           console.log(err);
         } finally {
             setAddPatient(false);
@@ -139,7 +144,7 @@ const PredictInputScreen = (props) => {
     };
     const predictFunction = async () => {
         try {
-          setLoading(true);
+          setLoadingPredict(true);
           const selectedPatient = patientData.find((pa) => pa._id === patientID);
           const formData = new FormData();
             formData.append(`inputImage`, {
@@ -156,7 +161,7 @@ const PredictInputScreen = (props) => {
             withCredentials: true,
           });
           console.log('success', JSON.stringify(response.data));
-          setLoading(false);
+          setLoadingPredict(false);
           props.navigation.navigate('Predict', {
             screen: 'PredictResultScreen',
             params: {
@@ -165,10 +170,10 @@ const PredictInputScreen = (props) => {
             },
           })
         } catch (err) {
-          setLoading(false);
-          // setVisible(true);
-          setErrorMessage(err?.toString()||"Network Error");
-          // setTitle('Error');
+          setLoadingPredict(false);
+          setVisible(true);
+          setErrorMessage("What's wrong here?");
+          setTitle('Error');
           console.log(err);
         }
     };
@@ -192,6 +197,13 @@ const PredictInputScreen = (props) => {
       };
   return (
     <SafeAreaView style={styles.container}>
+        {loadingPredict && <Loader />}
+        <Message
+            visible={visible}
+            clickCancel={() => { setVisible(false) }}
+            title={title}
+            message={errorMessage}
+        />
         <ScrollView>
             {/* input */}
             <View style={{width: '90%', marginTop: scale(15), flexDirection:'row', alignSelf:'center', alignItems:'center', justifyContent:'space-between'}}>
@@ -392,7 +404,7 @@ const PredictInputScreen = (props) => {
                         text={'Dự đoán'}
                         backgroundColor={color.Button}
                         color={color.White}
-                        loading={loading}
+                        loading={loadingPredict}
                         onPress={predictFunction}
                     />
                 ):(

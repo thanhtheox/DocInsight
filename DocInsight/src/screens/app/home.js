@@ -130,7 +130,8 @@ const HomeScreen = (props) => {
                 <UploadImage onPressTake={takePhoto} onPressPick={pickPhoto}/>
             </View>
             {/* Predict Results */}
-            <Text style={styles.titlePart}>Gần đây</Text>
+            {predictResults.length != 0 && <>
+                <Text style={styles.titlePart}>Gần đây</Text>
             <View style={{
                 justifyContent: 'center', alignItems: 'center'
             }}>
@@ -191,6 +192,7 @@ const HomeScreen = (props) => {
                     )}
                 />      
             </View>
+            </>}
             {/* Medical News */}
             <Text style={styles.titlePart}>Tin tức y khoa</Text>
             <View style={{maxHeight: scale(200), width: '95%', flexDirection: 'column', alignSelf:'center', marginTop: scale(10)}}>
