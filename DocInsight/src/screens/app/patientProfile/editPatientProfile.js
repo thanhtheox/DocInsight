@@ -37,7 +37,7 @@ const EditPatientProfileScreen = (props) => {
     const [birthday, setBirthday] = useState(patient.birthday);
     const [address, setAddress] = useState(patient.address);
     const [showDropDown, setShowDropDown] = useState(false);
-    const [title, setTitle] = useState('Error');
+    const [title, setTitle] = useState('LỖI');
     const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loadingEdit, setLoadingEdit] = useState(false);
@@ -93,8 +93,8 @@ const EditPatientProfileScreen = (props) => {
         } catch (err) {
             setLoadingEdit(false);
           setVisible(true);
-          setErrorMessage(err?.toString()||"Network Error");
-          setTitle('Error');
+          setErrorMessage(err?.toString()||"Lỗi mạng!");
+          setTitle('LỖI');
           console.log(err);
         }
       };
@@ -110,8 +110,8 @@ const EditPatientProfileScreen = (props) => {
         } catch (err) {
             setLoadingDelete(false);
           setVisible(true);
-          setErrorMessage("What's wrong here?");
-          setTitle('Error');
+          setErrorMessage("Xảy ra lỗi khi chỉnh sửa bệnh nhân?");
+          setTitle('LỖI');
           console.log(err);
         }
       };

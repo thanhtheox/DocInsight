@@ -24,7 +24,7 @@ const UnderLine = props => {
               height: 1,
               borderBottomWidth: 0.3,
               marginTop: scale(4),
-              borderColor: text === "Error" ? color.Warning : color.Button,
+              borderColor: text === "LỖI" ? color.Warning : color.Button,
             }}
           />
         </View>
@@ -48,7 +48,7 @@ const UnderLine = props => {
               height: 1,
               borderBottomWidth: 0.3,
               marginTop: scale(4),
-              borderColor: text === "Error" ? color.Warning : color.Button,
+              borderColor: text === "LỖI" ? color.Warning : color.Button,
             }}
           />
         </View>

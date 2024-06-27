@@ -36,7 +36,7 @@ const AddPatientProfileScreen = (props) => {
     const [birthday, setBirthday] = useState();
     const [address, setAddress] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
-    const [title, setTitle] = useState('Error');
+    const [title, setTitle] = useState('LỖI');
     const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
@@ -84,8 +84,8 @@ const AddPatientProfileScreen = (props) => {
         } catch (err) {
           setLoading(false);
           setVisible(true);
-          setErrorMessage("What's wrong here?");
-          setTitle('Error');
+          setErrorMessage("Xảy ra lỗi khi thêm bệnh nhân?");
+          setTitle('LỖI');
           console.log(err);
         }
       };

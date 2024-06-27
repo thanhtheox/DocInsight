@@ -89,9 +89,9 @@ const HomeScreen = (props) => {
                     }
                 })
                 if(response.data.length > 5)
-                    setPredictResults(response.data.slice(0,5));
+                    setPredictResults(response.data.reverse().slice(0,5));
                 else
-                    setPredictResults(response.data);
+                    setPredictResults(response.data.reverse());
               } catch (err) {
                 console.log(err);
               }

@@ -18,6 +18,7 @@ import useAuth from '../../../hooks/useAuth'
 import SubmitButton from '../../../components/submitButton'
 import Loader from '../../../components/loader'
 import Message from '../../../components/message'
+import axios from 'axios'
 
 const createPatientSchema = yup.object({
     name: yup
@@ -50,7 +51,7 @@ const PredictInputScreen = (props) => {
     const [birthday, setBirthday] = useState();
     const [address, setAddress] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
-    const [title, setTitle] = useState('Error');
+    const [title, setTitle] = useState('LỖI');
     const [visible, setVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
@@ -132,8 +133,8 @@ const PredictInputScreen = (props) => {
         } catch (err) {
           setLoading(false);
           setVisible(true);
-          setErrorMessage("What's wrong here?");
-          setTitle('Error');
+          setErrorMessage("Xảy ra lỗi khi thêm bệnh nhân?");
+          setTitle('LỖI');
           console.log(err);
         } finally {
             setAddPatient(false);
@@ -144,39 +145,65 @@ const PredictInputScreen = (props) => {
     };
     const predictFunction = async () => {
         try {
-          setLoadingPredict(true);
-          const selectedPatient = patientData.find((pa) => pa._id === patientID);
-          const formData = new FormData();
-            formData.append(`inputImage`, {
-            name: new Date() + `_image`,
-            uri: input,
-            type: 'image/jpg',
+            setLoadingPredict(true);
+            
+            const selectedPatient = patientData.find((pa) => pa._id === patientID);
+            
+            
+            
+            let predictResponse;
+            
+            try {
+                const formData = new FormData();
+                formData.append('upload', {
+                    name: 'input',
+                    uri: input,
+                    type: 'image/png',
+                });
+                predictResponse = await axios.post('https://shap-api.blackwave-b37c5d34.eastus.azurecontainerapps.io/XAI', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                
+                console.log('Predict success', JSON.stringify(predictResponse.data));
+            } catch (err) {
+                setLoadingPredict(false);
+                setVisible(true);
+                setErrorMessage("Xảy ra lỗi khi dự đoán?");
+                setTitle('LỖI');
+                console.log(err);
+            }
+            
+            const response = await axiosPrivate.post('/result', {
+                patientId: patientID,
+                inputImage: predictResponse.data.input_url,
+                resultImage: predictResponse.data.result_url,
+                coronaPercent: predictResponse.data.prediction[0],
+                normalPercent: predictResponse.data.prediction[1],
+                pneumoniaPercent: predictResponse.data.prediction[2],
+                tuberculosisPercent: predictResponse.data.prediction[3]
             });
-            formData.append(`patientId`, patientID);
-          const response = await axiosPrivate.post('/result',formData, {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true,
-          });
-          console.log('success', JSON.stringify(response.data));
-          setLoadingPredict(false);
-          props.navigation.navigate('Predict', {
-            screen: 'PredictResultScreen',
-            params: {
-                patient: selectedPatient,
-                result: response.data.createdResult
-            },
-          })
+    
+            console.log('Prediction success', JSON.stringify(response.data));
+            setLoadingPredict(false);
+    
+            props.navigation.navigate('Predict', {
+                screen: 'PredictResultScreen',
+                params: {
+                    patient: selectedPatient,
+                    result: response.data.createdResult
+                },
+            });
         } catch (err) {
-          setLoadingPredict(false);
-          setVisible(true);
-          setErrorMessage("What's wrong here?");
-          setTitle('Error');
-          console.log(err);
+            setLoadingPredict(false);
+            setVisible(true);
+            setErrorMessage("Xảy ra lỗi khi dự đoán?");
+            setTitle('LỖI');
+            console.log(err);
         }
     };
+    
     const takePhoto = async () => {
         const result = await launchCamera({
           savePhotos: true,

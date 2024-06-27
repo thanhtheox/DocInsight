@@ -9,7 +9,6 @@ import scale from '../../../constants/responsive'
 import FONT_FAMILY from '../../../constants/fonts'
 import UploadImage from '../../../components/uploadImage'
 import { saveInput } from '../../../redux/actions/resultActions'
-import SubmitButton from '../../../components/submitButton'
 
 
 const PredictResultScreen = (props) => {
@@ -138,14 +137,6 @@ const PredictResultScreen = (props) => {
             </View>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={{uri: result.resultImage}} resizeMode='cover'/>
-            </View>
-            <View style={{marginTop:scale(10), alignSelf:'center'}}>
-                <SubmitButton
-                    text={'Lưu hình ảnh'}
-                    backgroundColor={color.Button}
-                    color={color.White}
-                    onPress={checkPermission}
-                />
             </View>
             {/* patient profile */}
             <Text style={styles.titlePart}>Thông tin bệnh nhân</Text>

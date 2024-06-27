@@ -31,7 +31,7 @@ const SignInScreen = (props) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('LỖI');
   const [visible, setVisible] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
@@ -87,8 +87,8 @@ const SignInScreen = (props) => {
       console.log('err', err);
       setLoading(false);
       setVisible(true);
-      setErrorMessage("What's wrong here?");
-      setTitle('Error');
+      setErrorMessage("Xảy ra lỗi khi đăng nhập?");
+      setTitle('LỖI');
     }
   };
 

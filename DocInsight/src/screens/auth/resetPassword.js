@@ -28,7 +28,7 @@ const ResetPasswordScreen = (props) => {
   const axiosPrivate = useAxiosPrivate();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('LỖI');
   const [visible, setVisible] = useState(false);
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
@@ -81,8 +81,8 @@ const ResetPasswordScreen = (props) => {
       console.log('err', err);
       setLoading(false);
       setVisible(true);
-      setErrorMessage("What's wrong here?");
-      setTitle('Error');
+      setErrorMessage("Xảy ra lỗi khi thay đổi mật khẩu?");
+      setTitle('LỖI');
     }
   };
 

@@ -35,7 +35,7 @@ const SignUpScreen = (props) => {
   const [name, setName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [visible, setVisible] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('LỖI');
   const [loading, setLoading] = useState(false);
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [gender, setGender] = useState('male');
@@ -112,8 +112,8 @@ const SignUpScreen = (props) => {
     } catch (err) {
       setLoading(false);
       setVisible(true);
-      setErrorMessage("What's wrong here?");
-      setTitle('Error');
+      setErrorMessage("Xảy ra lỗi khi đăng ký?");
+      setTitle('LỖI');
       console.log(err);
     }
   };
