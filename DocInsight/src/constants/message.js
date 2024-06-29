@@ -18,15 +18,15 @@ const Message = props => {
             text={props.title}
             textStyle={[
               styles.titleText,
-              props.title === 'Error' && {color: color.Warning, opacity: 0.7},
+              props.title === 'LỖI' && {color: color.Warning, opacity: 0.7},
             ]}
             style={{
               color:
-                props.title === 'Error' ? color.Warning : color.Button,
+                props.title === 'LỖI' ? color.Warning : color.Button,
             }}
             lineColor={{
               backgroundColor:
-                props.title === 'Error' ? color.Warning : color.Button,
+                props.title === 'LỖI' ? color.Warning : color.Button,
             }}></UnderLine>
           <View style={styles.noticeMessage}>
             <View
@@ -39,7 +39,7 @@ const Message = props => {
               <Text
                 style={[
                   styles.messageText,
-                  props.title === 'Error' ? {color: 'red'} : null,
+                  props.title === 'LỖI' ? {color: color.Warning} : null,
                 ]}
                 numberOfLines={5}>
                 {props.message}

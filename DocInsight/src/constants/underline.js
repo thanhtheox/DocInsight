@@ -24,7 +24,7 @@ const UnderLine = props => {
               height: 1,
               borderBottomWidth: 0.3,
               marginTop: scale(4),
-              borderColor: text === 'Error' ? color.Warning : color.Blue,
+              borderColor: text === 'LỖI' ? color.Warning : color.Blue,
             }}
           />
         </View>
@@ -48,7 +48,7 @@ const UnderLine = props => {
               height: 1,
               borderBottomWidth: 0.3,
               marginTop: scale(4),
-              borderColor: text === 'Error' ? color.Warning : color.Blue,
+              borderColor: text === 'LỖI' ? color.Warning : color.Blue,
             }}
           />
         </View>
@@ -62,11 +62,11 @@ export default UnderLine;
 const styles = StyleSheet.create({
   background: isChoosing => ({
     alignSelf: 'center',
-    color: isChoosing ? color.Blue : 'grey',
+    color: isChoosing ? color.Warning : color.Description,
     letterSpacing: -0.5,
   }),
   text: isChoosing => ({
-    color: isChoosing ? color.Blue : 'black',
+    color: isChoosing ? color.Warning : color.Description,
     paddingHorizontal: scale(26),
 
     fontSize: scale(15),
