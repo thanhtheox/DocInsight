@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     height: scale(70),
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: color.White
   },
   viewIcon: {
     alignSelf:'center',

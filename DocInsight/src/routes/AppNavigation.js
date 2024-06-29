@@ -17,6 +17,7 @@ import SettingsScreen from '../screens/app/settings/settings';
 import AboutScreen from '../screens/app/settings/about';
 
 import Header from '../components/header';
+
 import color from '../constants/color';
 import { IC_Folder, IC_Home, IC_Predict, IC_Setting } from '../assets/icons';
 import FONT_FAMILY from '../constants/fonts';
